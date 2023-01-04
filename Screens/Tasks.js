@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Button,
 } from "react-native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
 import RNPickerSelect from "react-native-picker-select";
@@ -18,6 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../features/authSlice";
 import fetchUsers from "../utils/get-users";
 import { setLeaders } from "../features/appSlice";
+import UserNavOption from "../components/TaskNavOption";
+import TaskModal from "../components/TaskModal";
 
 export default function Tasks({ router, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -70,155 +74,39 @@ export default function Tasks({ router, navigation }) {
     getTasks();
     getUsers();
   }, [router]);
-
-  console.log("Store user", user);
-  console.log("Store tasks", tasks);
   return (
     <ScrollView>
-      <SafeAreaView>
-        <View className="relative">
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-          >
-            <TouchableOpacity
-              style={styles.circle2}
-              onPress={() => navigation.navigate("YourProfile")}
-            >
-              <Image
-                style={{ height: 60, width: 60, borderRadius: 30 }}
-                source={require("../assets/Ava.png")}
-              />
-              <Text style={styles.txt5}>You</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.circle2}
-              onPress={() => navigation.navigate("Tasks")}
-            >
-              <View style={{ paddingLeft: 18, paddingTop: 18 }}>
-                <Image
-                  style={{ height: 20, width: 23 }}
-                  source={require("../assets/task.png")}
-                />
-              </View>
-              <Text
-                style={styles.txt6}
-                onPress={() => navigation.navigate("Tasks")}
-              >
-                Tasks
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.circle2}
-              onPress={() => navigation.navigate("alert")}
-            >
-              <View style={{ paddingLeft: 18, paddingTop: 16 }}>
-                <Image
-                  style={{ height: 20, width: 20 }}
-                  source={require("../assets/Bell.png")}
-                />
-              </View>
-              <Text style={styles.txt7}>Alerts</Text>
-            </TouchableOpacity>
+      <SafeAreaView className="relative h-screen bg-gray-300">
+        <View className="bg-white py-12 px-12 flex flex-col items-center justify-center">
+          <View className="flex w-[75%] flex-row   justify-between">
+            <UserNavOption type="avatar" caption={"You"} />
+            <UserNavOption type="icon" name="list" caption={"Tasks"} />
+            <UserNavOption type="icon" name="alert" caption={"Alerts"} />
           </View>
-
-          <TouchableOpacity>
-            <Text style={styles.txt11} onPress={() => setModalOpen(false)}>
-              x
-            </Text>
-          </TouchableOpacity>
-          <RNPickerSelect
-            placeholder={{ label: "Select", value: null }}
-            placeholderTextColor="red"
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: "Home", value: "home" },
-              { label: "Office", value: "Office" },
-            ]}
-          />
-
-          {tasks.map((task, i) => {
-            return (
-              <TouchableOpacity
-                style={i % 2 == 0 ? styles.box1 : styles.box2}
-                onPress={() => navigation.navigate("taskView")}
-                key={i}
-              >
-                <View>
-                  <Text style={styles.txt1}>TODAY 5:30 PM</Text>
-                  <Text style={styles.txt2}>{task.taskname}</Text>
-                  <Text style={styles.txt4}>Leader Name Comes here</Text>
-                </View>
-                <View style={styles.flag}></View>
-              </TouchableOpacity>
-            );
-          })}
-
-          {/***************Modal Start*****************/}
-          <View>
-            <Modal transparent={true} visible={modalOpen} animationType="fade">
-              <BlurView blurType="light" style={styles.contentWrap}>
-                <View style={styles.modalView}>
-                  <TouchableOpacity>
-                    <Text
-                      style={styles.txt10}
-                      onPress={() => setModalOpen(false)}
-                    >
-                      x
-                    </Text>
-                  </TouchableOpacity>
-                  <Text style={styles.txt8}>What do you want to do? </Text>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      paddingLeft: 35,
-                      paddingTop: 40,
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => {
-                        setModalOpen(false);
-                        navigation.navigate("AddNewTask");
-                      }}
-                    >
-                      <View style={styles.btn}>
-                        <Text style={styles.txt9}>ADD</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ paddingTop: 20 }}
-                      onPress={() => navigation.navigate("modifyTask")}
-                    >
-                      <View style={styles.btn1}>
-                        <Text style={styles.txt9}>MODIFY</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ paddingTop: 20 }}
-                      onPress={() => navigation.navigate("deleteTask")}
-                    >
-                      <View style={styles.btn2}>
-                        <Text style={styles.txt9}>DELETE</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </BlurView>
-            </Modal>
-          </View>
-          {/***************Modal Ends*****************/}
-          <TouchableOpacity
-            className={
-              "shadow-2xl -right-1 h-12 w-12 bg-white bottom-2 flex items-center justify-center text-white rounded-full z-100 fixed"
-            }
-            onPress={() => {
-              setModalOpen(true);
-            }}
-          >
-            <View>
-              <Text className="font-bold">+</Text>
-            </View>
-          </TouchableOpacity>
         </View>
+
+        {tasks.map((task, i) => {
+          return (
+            <TouchableOpacity
+              style={i % 2 == 0 ? styles.box1 : styles.box2}
+              onPress={() => navigation.navigate("taskView")}
+              key={i}
+            >
+              <View>
+                <Text style={styles.txt1}>TODAY 5:30 PM</Text>
+                <Text style={styles.txt2}>{task.taskname}</Text>
+                <Text style={styles.txt4}>Leader Name Comes here</Text>
+              </View>
+              <View style={styles.flag}></View>
+            </TouchableOpacity>
+          );
+        })}
+
+        <TouchableOpacity className="w-[55px] h-[55px] absolute bottom-5 right-5 bg-white flex items-center justify-center rounded-full shadow-md">
+          <Text className="text-2xl font-semibold">+</Text>
+        </TouchableOpacity>
+
+        <TaskModal />
       </SafeAreaView>
     </ScrollView>
   );
