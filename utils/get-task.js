@@ -1,8 +1,8 @@
 import axios from "axios";
 
-async function fetchTasks(token) {
+async function getTask(token, taskid) {
    try {
-      const r = await axios.get(`http://20.219.16.124:5001/api/task-list`, {
+      const r = await axios.get(`http://20.219.16.124:5001/api/task-info/${taskid}`, {
          headers: {
             Authorization: "Bearer " + token,
          },
@@ -17,4 +17,4 @@ async function fetchTasks(token) {
    }
 }
 
-export default fetchTasks;
+export default getTask;
