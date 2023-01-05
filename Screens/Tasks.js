@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BlurView } from "expo-blur";
+
 import RNPickerSelect from "react-native-picker-select";
 import fetchTasks from "../utils/fetch-tasks";
 import getUser from "../utils/get-user-info";
@@ -24,7 +24,7 @@ import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
 
 export default function Tasks({ router, navigation }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -67,6 +67,7 @@ export default function Tasks({ router, navigation }) {
       const token = await getToken();
       const tasks = await fetchTasks(token);
       if (tasks) {
+        console.log("tasks", tasks);
         setTasks(tasks.data);
       }
     }
@@ -75,20 +76,25 @@ export default function Tasks({ router, navigation }) {
     getUsers();
   }, [router]);
   return (
-    <ScrollView>
-      <SafeAreaView className="relative h-screen bg-gray-300">
-        <View className="bg-white py-12 px-12 flex flex-col items-center justify-center">
-          <View className="flex w-[75%] flex-row   justify-between">
-            <UserNavOption type="avatar" caption={"You"} />
-            <UserNavOption type="icon" name="list" caption={"Tasks"} />
-            <UserNavOption type="icon" name="alert" caption={"Alerts"} />
-          </View>
+    <SafeAreaView className="relative h-screen bg-gray-300">
+      <View className="bg-white py-12 px-12 flex flex-col items-center justify-center">
+        <View className="flex w-[75%] flex-row   justify-between">
+          <UserNavOption type="avatar" caption={"You"} />
+          <UserNavOption type="icon" name="list" caption={"Tasks"} />
+          <UserNavOption type="icon" name="alert" caption={"Alerts"} />
         </View>
-
+      </View>
+      <ScrollView>
         {tasks.map((task, i) => {
           return (
             <TouchableOpacity
-              style={i % 2 == 0 ? styles.box1 : styles.box2}
+              style={
+                i % 3 == 0
+                  ? styles.box1
+                  : i % 3 == 1
+                  ? styles.box2
+                  : styles.box3
+              }
               onPress={() => navigation.navigate("taskView")}
               key={i}
             >
@@ -101,14 +107,17 @@ export default function Tasks({ router, navigation }) {
             </TouchableOpacity>
           );
         })}
+      </ScrollView>
 
-        <TouchableOpacity className="w-[55px] h-[55px] absolute bottom-5 right-5 bg-white flex items-center justify-center rounded-full shadow-md">
-          <Text className="text-2xl font-semibold">+</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        className="w-[55px] h-[55px] absolute bottom-5 right-5 bg-white flex items-center justify-center rounded-full shadow-md"
+        onPress={() => setOpen(true)}
+      >
+        <Text className="text-2xl font-semibold">+</Text>
+      </TouchableOpacity>
 
-        <TaskModal />
-      </SafeAreaView>
-    </ScrollView>
+      <TaskModal open={open} setOpen={setOpen} />
+    </SafeAreaView>
   );
 }
 
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#d47fa6",
     height: 200,
     width: "100%",
-    marginTop: 30,
     elevation: 3,
   },
   addButton: {
