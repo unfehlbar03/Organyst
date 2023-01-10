@@ -9,15 +9,15 @@ import getUser from "../utils/get-user-info";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../features/authSlice";
 import fetchUsers from "../utils/get-users";
-import { setLeaders } from "../features/appSlice";
+import { setLeader, setUsers, selectTasks, setTasks } from "../features/appSlice";
 import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
 
 export default function Tasks({ router, navigation }) {
    const [open, setOpen] = useState(false);
-   const [tasks, setTasks] = useState([]);
    const dispatch = useDispatch();
    const user = useSelector(selectUser);
+   const tasks = useSelector(selectTasks);
    const getToken = async () => {
       try {
          const value = await AsyncStorage.getItem("@jwt_token");
@@ -49,7 +49,7 @@ export default function Tasks({ router, navigation }) {
          const users = await fetchUsers(token);
          if (users) {
             console.log("users", users);
-            dispatch(setLeaders(users.data));
+            dispatch(setUsers(users.data));
          }
       }
 
@@ -58,24 +58,43 @@ export default function Tasks({ router, navigation }) {
          const tasks = await fetchTasks(token);
          if (tasks) {
             console.log("tasks", tasks);
-            setTasks(tasks.data);
+            dispatch(setTasks(tasks.data));
          }
       }
       getUserInfo();
       getTasks();
       getUsers();
    }, [router]);
+
    return (
-      <SafeAreaView className="relative h-screen bg-gray-300">
-         <View className="bg-white py-12 px-12 flex flex-col items-center justify-center">
-            <View className="flex w-[75%] flex-row   justify-between">
-               <UserNavOption type="avatar" caption={"You"} />
-               <UserNavOption type="icon" name="list" caption={"Tasks"} />
-               <UserNavOption type="icon" name="alert" caption={"Alerts"} />
+      <SafeAreaView className="relative h-screen">
+         <View className=" py-16 pt-24 px-12 flex flex-col items-center justify-center">
+            <View className="flex w-[90%] flex-row  justify-between">
+               <TouchableOpacity
+                  onPress={() => {
+                     navigation.navigate("YourProfile");
+                  }}
+               >
+                  <UserNavOption type="avatar" caption={"You"} />
+               </TouchableOpacity>
+               <TouchableOpacity
+                  onPress={() => {
+                     navigation.navigate("tasks");
+                  }}
+               >
+                  <UserNavOption type="icon" name="list" caption={"Tasks"} />
+               </TouchableOpacity>
+               <TouchableOpacity
+                  onPress={() => {
+                     navigation.navigate("alert");
+                  }}
+               >
+                  <UserNavOption type="icon" name="alert" caption={"Alerts"} />
+               </TouchableOpacity>
             </View>
          </View>
          <ScrollView>
-            {tasks.map((task, i) => {
+            {tasks?.map((task, i) => {
                return (
                   <TouchableOpacity
                      style={i % 3 == 0 ? styles.box1 : i % 3 == 1 ? styles.box2 : styles.box3}

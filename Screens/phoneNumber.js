@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { StyleSheet, SafeAreaView, useNavigation, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import PhoneInput from "react-native-phone-number-input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import sendOtp from "../utils/send_otp";
 
 export default function Phone({ route, navigation }) {

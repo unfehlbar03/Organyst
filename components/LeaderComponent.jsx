@@ -2,12 +2,12 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import CheckBox from "./CheckBox";
 
-const LeaderComponent = ({ leader, setLeaders, leaders }) => {
-  console.log("Leaders: ", leaders);
+const LeaderComponent = ({ leader, setLeader }) => {
+  
   return (
     <View className={"flex-row px-2 py-2"}>
       <View className="flex-row flex-1 space-x-2 items-center">
-        <CheckBox leaders={leaders} setLeaders={setLeaders} leader={leader} />
+        <CheckBox  setLeader={setLeader} leader={leader} />
         <View>
           <Image
             source={{

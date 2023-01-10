@@ -3,7 +3,7 @@ import React from "react";
 import { OrderedListOutlined } from "@ant-design/icons";
 const UserNavOption = ({ type, name, caption }) => {
   return (
-    <View className="relative w-[65px] h-[65px] mr-6 flex items-center justify-center gap-2">
+    <View className="relative w-[65px] h-[65px]  flex items-center justify-center gap-2">
       {type === "avatar" && (
         <View className="w-full h-full">
           <>
@@ -20,13 +20,13 @@ const UserNavOption = ({ type, name, caption }) => {
         </View>
       )}
       {type === "icon" && name === "list" && (
-        <View className="h-full w-full flex items-center justify-center border border-gray-500 rounded-full">
-          <Image source={require("../assets/task.png")} />
+        <View className="h-full w-full flex items-center justify-center  rounded-full bg-white shadow-2xl">
+          <Image source={require("../assets/task.png")} style={{ height: 20, width: 23 }}/>
         </View>
       )}
       {type === "icon" && name === "alert" && (
-        <View className="h-full w-full flex items-center justify-center border border-gray-500 rounded-full">
-          <Image source={require("../assets/Bell.png")} />
+        <View className="h-full w-full flex items-center justify-center  rounded-full bg-white shadow-2xl" style={{elevation:5}}>
+          <Image source={require("../assets/Bell.png")} style={{ height: 20, width: 20 }}/>
         </View>
       )}
       <Text className="text-gray-500 font-semibold">{caption}</Text>

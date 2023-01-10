@@ -9,14 +9,14 @@ async function addTask(token, data) {
             taskname: data.name,
             subject: data.subject,
             description: data.description,
-            startDate: "2022-12-28",
-            endDate: "2023-01-12",
-            endTime: "23:59",
+            startDate: data.startDate,
+            endDate: data.endDate,
+            endTime: data.endtime,
             priority: data.priority,
             createdBy: data._id,
             followers: data.followers,
             leaders: data.createdBy,
-            beneficiary: { mobile: "7406444532", name: "Rahul" },
+            beneficiary: "63a6ac9a4816e11620c655b9",
          },
          {
             headers: {
@@ -25,12 +25,15 @@ async function addTask(token, data) {
          }
       );
 
+      console.log(r);
+
       return r.data;
    } catch (e) {
       if (e.response && e.response.data) {
          return e.response.data;
+      } else {
+         e.response;
       }
-      return false;
    }
 }
 

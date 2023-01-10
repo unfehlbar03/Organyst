@@ -1,19 +1,25 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { useSelector } from "react-redux";
+import {
+  selectLeader,
+  selectTaskFollowers,
+  selectTaskLeader,
+} from "../features/appSlice";
 
-const CheckBox = ({ leaders, setLeaders, leader }) => {
+const CheckBox = ({ setLeader, leader }) => {
   const [checked, setChecked] = React.useState(false);
-  console.log("ls: ", leaders);
-  console.log("leader: ", leader);
+  const leaders = useSelector(selectTaskLeader);
+
   const handleAdd = () => {
     setChecked(true);
-    setLeaders([...leaders, leader]);
+    setLeader(leader);
   };
   const handleRemove = () => {
     setChecked(false);
     console.log("Leader: ", leader);
 
-    setLeaders(leaders.filter((l) => l._id !== leader._id));
+    setLeader(leaders.filter((l) => l._id !== leader._id));
   };
   return (
     <TouchableOpacity

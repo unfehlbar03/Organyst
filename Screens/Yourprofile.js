@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getUser from "../utils/get-user-info";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/authSlice";
+import UserNavOption from "../components/TaskNavOption";
 
 export default function YourProfile({ navigation }) {
    const u = useSelector(selectUser);
@@ -26,23 +27,30 @@ export default function YourProfile({ navigation }) {
    return (
       <ScrollView>
          <SafeAreaView>
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-               <TouchableOpacity style={styles.circle2}>
-                  <Image style={{ height: 60, width: 60, borderRadius: 30 }} source={require("../assets/Ava.png")} />
-                  <Text style={styles.txt1}>You</Text>
-               </TouchableOpacity>
-               <TouchableOpacity style={styles.circle2} onPress={() => navigation.navigate("tasks")}>
-                  <View style={{ paddingLeft: 18, paddingTop: 18 }}>
-                     <Image style={{ height: 20, width: 23 }} source={require("../assets/task.png")} />
-                  </View>
-                  <Text style={styles.txt2}>Tasks</Text>
-               </TouchableOpacity>
-               <TouchableOpacity style={styles.circle2} onPress={() => navigation.navigate("alert")}>
-                  <View style={{ paddingLeft: 18, paddingTop: 16 }}>
-                     <Image style={{ height: 20, width: 20 }} source={require("../assets/Bell.png")} />
-                  </View>
-                  <Text style={styles.txt2}>Alerts</Text>
-               </TouchableOpacity>
+            <View className="pt-24 px-12 flex flex-col items-center justify-center">
+               <View className="flex w-[90%] flex-row  justify-between">
+                  <TouchableOpacity
+                     onPress={() => {
+                        navigation.navigate("YourProfile");
+                     }}
+                  >
+                     <UserNavOption type="avatar" caption={"You"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        navigation.navigate("tasks");
+                     }}
+                  >
+                     <UserNavOption type="icon" name="list" caption={"Tasks"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        navigation.navigate("alert");
+                     }}
+                  >
+                     <UserNavOption type="icon" name="alert" caption={"Alerts"} />
+                  </TouchableOpacity>
+               </View>
             </View>
             <View style={styles.aline}>
                <View>
