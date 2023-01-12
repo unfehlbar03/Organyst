@@ -32,99 +32,103 @@ import { registerTranslation } from "react-native-paper-dates";
 const Stack = createStackNavigator();
 
 registerTranslation("en", {
-   save: "Save",
-   selectSingle: "Select date",
-   selectMultiple: "Select dates",
-   selectRange: "Select Task's Start and End Date",
-   notAccordingToDateFormat: (inputFormat) => `Date format must be ${inputFormat}`,
-   mustBeHigherThan: (date) => `Must be later then ${date}`,
-   mustBeLowerThan: (date) => `Must be earlier then ${date}`,
-   mustBeBetween: (startDate, endDate) => `Must be between ${startDate} - ${endDate}`,
-   dateIsDisabled: "Day is not allowed",
-   previous: "Previous",
-   next: "Next",
-   typeInDate: "Type in date",
-   pickDateFromCalendar: "Pick date from calendar",
-   close: "Close",
+  save: "Save",
+  selectSingle: "Select date",
+  selectMultiple: "Select dates",
+  selectRange: "Select Task's Start and End Date",
+  notAccordingToDateFormat: (inputFormat) =>
+    `Date format must be ${inputFormat}`,
+  mustBeHigherThan: (date) => `Must be later then ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Must be between ${startDate} - ${endDate}`,
+  dateIsDisabled: "Day is not allowed",
+  previous: "Previous",
+  next: "Next",
+  typeInDate: "Type in date",
+  pickDateFromCalendar: "Pick date from calendar",
+  close: "Close",
 });
 
 const isAndroid = require("react-native").Platform.OS === "android"; // this line is only needed if you don't use an .android.js file
 const isHermesEnabled = !!global.HermesInternal;
 if (isHermesEnabled || isAndroid) {
-   require("@formatjs/intl-getcanonicallocales/polyfill");
-   require("@formatjs/intl-locale/polyfill");
+  require("@formatjs/intl-getcanonicallocales/polyfill");
+  require("@formatjs/intl-locale/polyfill");
 
-   require("@formatjs/intl-pluralrules/polyfill");
-   require("@formatjs/intl-pluralrules/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-pluralrules/polyfill");
+  require("@formatjs/intl-pluralrules/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-displaynames/polyfill");
-   require("@formatjs/intl-displaynames/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-displaynames/polyfill");
+  require("@formatjs/intl-displaynames/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-listformat/polyfill");
-   require("@formatjs/intl-listformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-listformat/polyfill");
+  require("@formatjs/intl-listformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-numberformat/polyfill");
-   require("@formatjs/intl-numberformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-numberformat/polyfill");
+  require("@formatjs/intl-numberformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-relativetimeformat/polyfill");
-   require("@formatjs/intl-relativetimeformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-relativetimeformat/polyfill");
+  require("@formatjs/intl-relativetimeformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-datetimeformat/polyfill");
-   require("@formatjs/intl-datetimeformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
+  require("@formatjs/intl-datetimeformat/polyfill");
+  require("@formatjs/intl-datetimeformat/locale-data/en.js"); // USE YOUR OWN LANGUAGE OR MULTIPLE IMPORTS YOU WANT TO SUPPORT
 
-   require("@formatjs/intl-datetimeformat/add-golden-tz.js");
+  require("@formatjs/intl-datetimeformat/add-golden-tz.js");
 
-   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
-   if ("__setDefaultTimeZone" in Intl.DateTimeFormat) {
-      //  Are you using Expo, use this instead of previous 2 lines
-      Intl.DateTimeFormat.__setDefaultTimeZone(require("expo-localization").timezone);
-   }
+  // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
+  if ("__setDefaultTimeZone" in Intl.DateTimeFormat) {
+    //  Are you using Expo, use this instead of previous 2 lines
+    Intl.DateTimeFormat.__setDefaultTimeZone(
+      require("expo-localization").timezone
+    );
+  }
 }
 
 export default function App() {
-   return (
-      <NavigationContainer>
-         <Provider store={store}>
-            <Stack.Navigator
-               screenOptions={{
-                  headerShown: false,
-               }}
-               initialRouteName="hi"
-            >
-               <Stack.Screen name="hi" component={Header} />
-               <Stack.Screen name="signin" component={Signin1} />
-               <Stack.Screen name="signup" component={Signup} />
-               <Stack.Screen name="tasks" component={Tasks} />
-               <Stack.Screen name="YourProfile" component={YourProfile} />
-               <Stack.Screen name="taskView" component={ViewTask} />
-               <Stack.Screen name="phoneNumber" component={Phone} />
-               <Stack.Screen name="alert" component={Alert} />
-               <Stack.Screen name="verification_code" component={Vcode} />
-               <Stack.Screen name="taskDetails" component={TaskDetails} />
-               <Stack.Screen name="AddNewTask" component={AddNewTask} />
-               <Stack.Screen name="modifyTask" component={ModifyTask} />
-               <Stack.Screen name="taskDetails1" component={TaskDetails1} />
-               <Stack.Screen name="deleteTask" component={DeleteTask} />
-               <Stack.Screen name="profileView1" component={ProfileViewOne} />
-               <Stack.Screen name="profileView2" component={ProfileViewTwo} />
-               <Stack.Screen name="myleadingtask" component={Myleading} />
-               <Stack.Screen name="myfollowingtask" component={Myfollowing} />
-               <Stack.Screen name="selectLeaders" component={SelectLeaders} />
-               <Stack.Screen name="selectFollowers" component={SelectFollowers} />
-               <Stack.Screen name="myLeadingTask1" component={MyLeadingTask1} />
-               <Stack.Screen name="edit1" component={Edit1} />
-               <Stack.Screen name="changepass" component={ChangePass} />
-            </Stack.Navigator>
-         </Provider>
-      </NavigationContainer>
-   );
+  return (
+    <NavigationContainer>
+      <Provider store={store}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+          initialRouteName="hi"
+        >
+          <Stack.Screen name="hi" component={Header} />
+          <Stack.Screen name="signin" component={Signin1} />
+          <Stack.Screen name="signup" component={Signup} />
+          <Stack.Screen name="tasks" component={Tasks} />
+          <Stack.Screen name="YourProfile" component={YourProfile} />
+          <Stack.Screen name="taskView" component={ViewTask} />
+          <Stack.Screen name="phoneNumber" component={Phone} />
+          <Stack.Screen name="alert" component={Alert} />
+          <Stack.Screen name="verification_code" component={Vcode} />
+          <Stack.Screen name="taskDetails" component={TaskDetails} />
+          <Stack.Screen name="AddNewTask" component={AddNewTask} />
+          <Stack.Screen name="modifyTask" component={ModifyTask} />
+          <Stack.Screen name="taskDetails1" component={TaskDetails1} />
+          <Stack.Screen name="deleteTask" component={DeleteTask} />
+          <Stack.Screen name="profileView1" component={ProfileViewOne} />
+          <Stack.Screen name="profileView2" component={ProfileViewTwo} />
+          <Stack.Screen name="myleadingtask" component={Myleading} />
+          <Stack.Screen name="myfollowingtask" component={Myfollowing} />
+          <Stack.Screen name="selectLeaders" component={SelectLeaders} />
+          <Stack.Screen name="selectFollowers" component={SelectFollowers} />
+          <Stack.Screen name="myLeadingTask1" component={MyLeadingTask1} />
+          <Stack.Screen name="edit1" component={Edit1} />
+          <Stack.Screen name="changepass" component={ChangePass} />
+        </Stack.Navigator>
+      </Provider>
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: "white",
-      alignItems: "center",
-      justifyContent: "center",
-   },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
