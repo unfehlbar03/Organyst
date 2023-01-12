@@ -17,7 +17,6 @@ const CheckBox = ({ setLeader, leader }) => {
   };
   const handleRemove = () => {
     setChecked(false);
-    console.log("Leader: ", leader);
 
     setLeader(leaders.filter((l) => l._id !== leader._id));
   };
