@@ -27,12 +27,10 @@ import {
 } from "../features/appSlice";
 import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
-import FlagIcon from "../components/FlagIcon";
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
   const tasks = useSelector(selectTasks);
   const getToken = async () => {
     try {

@@ -14,21 +14,12 @@ import {
   Button,
 } from "react-native";
 import { BlurView } from "expo-blur";
-import {
-  selectLeader,
-  selectTaskFollowers,
-  selectTaskLeader,
-} from "../features/appSlice";
+import { selectTaskFollowers, selectTaskLeader } from "../features/appSlice";
 import addTask from "../utils/addTask";
 import { selectUser } from "../features/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import {
-  setLeader,
-  setUsers,
-  selectTasks,
-  setTasks,
-} from "../features/appSlice";
+import { setLeader, setTasks } from "../features/appSlice";
 import { useDispatch, useSelector } from "react-redux";
 import fetchTasks from "../utils/fetch-tasks";
 
@@ -113,6 +104,7 @@ export default function AddNewTask({ navigation }) {
       .then(async (res) => {
         const { data } = res;
         Alert.alert("Task Created");
+        dispatch(setLeader(null));
         await getTasks();
         navigation.navigate("tasks");
       })

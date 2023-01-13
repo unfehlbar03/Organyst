@@ -7,20 +7,23 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ImageBackgroundBase,
+  Alert,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import LeaderComponent from "../components/LeaderComponent";
-import { selectLeader, setTaskLeader } from "../features/appSlice";
+import { selectLeader, selectUsers, setTaskLeader } from "../features/appSlice";
 
 export default function SelectLeaders({ navigation }) {
-  const users = useSelector((state) => selectLeader(state));
-  const [leaders, setLeader] = React.useState([]);
-  const dispatch = useDispatch();
+  const users = useSelector((state) => selectUsers(state));
+  const leader = useSelector(selectLeader);
 
   const handleSelection = () => {
-    dispatch(setTaskLeader(leaders));
-    navigation.navigate("AddNewTask");
+    if (leader) {
+      navigation.navigate("AddNewTask");
+    } else {
+      Alert.alert("You have to select atleast one leader for this task.");
+    }
   };
 
   return (
@@ -59,14 +62,7 @@ export default function SelectLeaders({ navigation }) {
 
         {users?.length > 0 &&
           users?.map((user) => {
-            return (
-              <LeaderComponent
-                key={user._id}
-                leader={user}
-                setLeaders={setLeaders}
-                leaders={users}
-              />
-            );
+            return <LeaderComponent key={user._id} leader={user} />;
           })}
 
         <TouchableOpacity
