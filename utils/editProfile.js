@@ -3,7 +3,7 @@ import axios from "axios";
 async function editProfile(token, data) {
   try {
     const r = await axios.put(
-      `http://192.168.29.170:5001/api/profileupdate`,
+      `http://20.219.16.124:5001/api/profileupdate`,
       {
         fullname: data.name,
         organization: data.organization,
