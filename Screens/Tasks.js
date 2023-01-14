@@ -19,6 +19,7 @@ import getUser from "../utils/get-user-info";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../features/authSlice";
 import fetchUsers from "../utils/get-users";
+import { useIsFocused } from "@react-navigation/native";
 import {
   setLeader,
   setUsers,
@@ -30,6 +31,7 @@ import TaskModal from "../components/TaskModal";
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const tasks = useSelector(selectTasks);
   const getToken = async () => {
@@ -74,7 +76,7 @@ export default function Tasks({ router, navigation }) {
     getUserInfo();
     getTasks();
     getUsers();
-  }, [router]);
+  }, [isFocused]);
 
   return (
     <SafeAreaView className="relative h-screen">

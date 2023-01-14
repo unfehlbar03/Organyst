@@ -13,9 +13,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import LeaderComponent from "../components/LeaderComponent";
 import { selectLeader, selectUsers, setTaskLeader } from "../features/appSlice";
+import { selectUser } from "../features/authSlice";
 
 export default function SelectLeaders({ navigation }) {
   const users = useSelector((state) => selectUsers(state));
+  const user = useSelector(selectUser);
   const leader = useSelector(selectLeader);
 
   const handleSelection = () => {
@@ -61,10 +63,11 @@ export default function SelectLeaders({ navigation }) {
         </View>
 
         {users?.length > 0 &&
-          users?.map((user) => {
-            return <LeaderComponent key={user._id} leader={user} />;
-          })}
-
+          users
+            ?.filter((u) => u._id !== user?._id)
+            .map((u) => {
+              return <LeaderComponent key={u._id} leader={u} />;
+            })}
         <TouchableOpacity
           style={{ flex: 1, flexDirection: "column-reverse", paddingTop: 50 }}
           onPress={handleSelection}

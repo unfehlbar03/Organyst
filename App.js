@@ -109,7 +109,7 @@ export default function App() {
           <Stack.Screen name="modifyTask" component={ModifyTask} />
           <Stack.Screen name="taskDetails1" component={TaskDetails1} />
           <Stack.Screen name="deleteTask" component={DeleteTask} />
-          <Stack.Screen name="profileView1" component={ProfileViewOne} />
+          <Stack.Screen name="profileView" component={ProfileViewOne} />
           <Stack.Screen name="profileView2" component={ProfileViewTwo} />
           <Stack.Screen name="myleadingtask" component={Myleading} />
           <Stack.Screen name="myfollowingtask" component={Myfollowing} />

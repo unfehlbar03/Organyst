@@ -10,6 +10,13 @@ import {
 
 const CheckBox = ({ leader }) => {
   const [checked, setChecked] = React.useState(false);
+  const ldr = useSelector(selectLeader);
+  React.useEffect(() => {
+    if (ldr) {
+      isPersonAdded();
+    }
+  }, [leader, ldr]);
+
   const dispatch = useDispatch();
 
   const handleAdd = () => {
@@ -20,6 +27,14 @@ const CheckBox = ({ leader }) => {
     setChecked(false);
     dispatch(setLeader(null));
   };
+
+  const isPersonAdded = () => {
+    const is = ldr._id == leader._id;
+    console.log("Is present", is);
+    setChecked(is);
+  };
+
+  console.log(ldr, leader);
   return (
     <TouchableOpacity
       className="w-6 h-6 border border-gray-400 rounded-full"
