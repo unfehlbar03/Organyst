@@ -39,6 +39,6 @@ To learn more about React Native and Expo, take a look at the following resource
 
 ## Contributions
 
-You can create a pull request or raise an issue if you find anythings.
-You can give this repo a Star if you like it.
-Your feedback and contributions are welcome!
+You can create a pull request or raise an issue if you find any issue.<br>
+You can give this repo a Star if you like it.<br>
+Your feedback and contributions are welcome!<br>
