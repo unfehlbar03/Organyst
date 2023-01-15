@@ -1,4 +1,4 @@
-# ORGANYT
+# ORGANYST
 
 This repository is created to maintain the developments of the frontend of this React Native-Expo app.<br>
 TailwindCSS is used for styling.
