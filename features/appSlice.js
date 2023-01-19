@@ -4,8 +4,9 @@ const intialState = {
   leader: null,
   taskLeader: null,
   taskFollowers: [],
-  users: null,
+  users: [],
   tasks: [],
+  beneficiary: null,
 };
 
 export const appSlice = createSlice({
@@ -14,6 +15,9 @@ export const appSlice = createSlice({
   reducers: {
     setLeader: (state, action) => {
       state.leader = action.payload;
+    },
+    setBeneficiary: (state, action) => {
+      state.beneficiary = action.payload;
     },
     setTasks: (state, action) => {
       state.tasks = action.payload;
@@ -57,11 +61,13 @@ export const {
   setTasks,
   removeFollower,
   resetFollowers,
+  setBeneficiary,
 } = appSlice.actions;
 
 export const selectLeader = (state) => state.app.leader;
 export const selectTaskFollowers = (state) => state.app.taskFollowers;
 export const selectUsers = (state) => state.app.users;
 export const selectTasks = (state) => state.app.tasks;
+export const selectBeneficiary = (state) => state.app.beneficiary;
 
 export default appSlice.reducer;

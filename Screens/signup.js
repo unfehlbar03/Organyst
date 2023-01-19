@@ -44,7 +44,7 @@ export default function Signup({ navigation }) {
     );
     if (response) {
       navigation.navigate("phoneNumber", {
-        number: mobile,
+        email: email,
       });
     } else {
       Alert.alert("Signup Failed");

@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   ImageBackgroundBase,
   Modal,
+  Alert,
 } from "react-native";
+import * as DocumentPicker from "expo-document-picker";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
@@ -29,6 +31,27 @@ export default function TaskDetails({ navigation }) {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
+  };
+
+  let _pickDocument = async () => {
+    const allowedFiles = ["application/pdf"];
+    let result = await DocumentPicker.getDocumentAsync({});
+    const { size } = result;
+
+    if (size > 5767168) {
+      return Alert.alert("Make sure file size not exceed 5mb");
+    }
+
+    if (!allowedFiles.includes(result.mimeType)) {
+      Alert.alert("Choosen file is not a pdf try again!");
+      return;
+    }
+
+    navigation.navigate("taskDetails1");
+
+    alert(result.uri);
+
+    console.log(result);
   };
   return (
     <ScrollView>
@@ -154,7 +177,7 @@ export default function TaskDetails({ navigation }) {
                                 paddingTop: 40,
                               }}
                             >
-                              <TouchableOpacity>
+                              <TouchableOpacity onPress={_pickDocument}>
                                 <View style={styles.btn}>
                                   <Text style={styles.txt9}>PDF</Text>
                                 </View>

@@ -15,7 +15,7 @@ async function addTask(token, data) {
         createdBy: data._id,
         followers: data.followers,
         leader: data.leader,
-        beneficiary: "63a6ac9a4816e11620c655b9",
+        beneficiary: data.beneficiary,
       },
       {
         headers: {

@@ -100,7 +100,12 @@ export default function Signin1({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.aline1}>
-        <TouchableOpacity style={styles.forgot}>
+        <TouchableOpacity
+          style={styles.forgot}
+          onPress={() => {
+            navigation.navigate("forgotpass");
+          }}
+        >
           <Text style={styles.txt}>FORGOT PASSWORD </Text>
         </TouchableOpacity>
       </View>

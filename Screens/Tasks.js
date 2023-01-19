@@ -28,12 +28,14 @@ import {
 } from "../features/appSlice";
 import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
+import Avatar from "../components/Avatar";
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const tasks = useSelector(selectTasks);
+  const user = useSelector(selectUser);
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@jwt_token");
@@ -87,21 +89,31 @@ export default function Tasks({ router, navigation }) {
               navigation.navigate("YourProfile");
             }}
           >
-            <UserNavOption type="avatar" caption={"You"} />
+            <UserNavOption type="avatar" caption={"You"} user={user} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("tasks");
             }}
           >
-            <UserNavOption type="icon" name="list" caption={"Tasks"} />
+            <UserNavOption
+              type="icon"
+              name="list"
+              caption={"Tasks"}
+              user={false}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("alert");
             }}
           >
-            <UserNavOption type="icon" name="alert" caption={"Alerts"} />
+            <UserNavOption
+              type="icon"
+              name="alert"
+              caption={"Alerts"}
+              user={false}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -137,12 +149,18 @@ export default function Tasks({ router, navigation }) {
                 </View>
                 <View className="w-full px-3 flex flex-row items-center gap-8">
                   <View className="flex flex-row relative">
-                    <View className="w-6 h-6 bg-orange-500 rounded-full border border-white  flex items-center justify-center">
-                      <Text className="text-white text-xs"> SK</Text>
-                    </View>
-                    <View className="w-6 h-6 bg-green-500 rounded-full border border-white absolute left-3 flex items-center justify-center">
-                      <Text className="text-white text-xs"> AJ</Text>
-                    </View>
+                    {task.followers.slice(0, 2).map((fl, index) => {
+                      console.log(fl);
+                      return (
+                        <Avatar
+                          follower_id={fl}
+                          color={
+                            index % 2 == 0 ? "bg-purple-500" : "bg-green-500"
+                          }
+                          key={index}
+                        />
+                      );
+                    })}
                   </View>
                   <Text className="text-white/50">
                     Join Marie,John & 10 others

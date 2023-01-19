@@ -1,7 +1,14 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import { OrderedListOutlined } from "@ant-design/icons";
-const UserNavOption = ({ type, name, caption }) => {
+const UserNavOption = ({ type, name, caption, user }) => {
+  console.log("User", user);
+  const getFormattedInitial = (n) => {
+    const words = n.split(" ");
+    return words.length > 1
+      ? words[0][0] + words[1][0]
+      : words[0][0] + words[0][1];
+  };
   return (
     <View className="relative w-[65px] h-[65px]  flex items-center justify-center gap-2">
       {type === "avatar" && (

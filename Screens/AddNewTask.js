@@ -14,8 +14,10 @@ import {
 import { BlurView } from "expo-blur";
 import {
   resetFollowers,
+  selectBeneficiary,
   selectLeader,
   selectTaskFollowers,
+  setBeneficiary,
   setTaskFollowers,
 } from "../features/appSlice";
 import addTask from "../utils/addTask";
@@ -25,6 +27,8 @@ import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import { setLeader, setTasks } from "../features/appSlice";
 import { useDispatch, useSelector } from "react-redux";
 import fetchTasks from "../utils/fetch-tasks";
+import AntIcon from "react-native-vector-icons/AntDesign";
+import FeatherIcon from "react-native-vector-icons/Feather";
 
 export default function AddNewTask({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,6 +37,7 @@ export default function AddNewTask({ navigation }) {
   const [subject, setSubject] = useState("");
   const [priority, setPriority] = useState("Low");
   const leader = useSelector(selectLeader);
+  const beneficiary = useSelector(selectBeneficiary);
   const followers = useSelector(selectTaskFollowers);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -106,12 +111,14 @@ export default function AddNewTask({ navigation }) {
       endTime,
       startDate: range.startDate,
       endDate: range.endDate,
+      beneficiary,
     })
       .then(async (res) => {
         const { data } = res;
         Alert.alert("Task Created");
         dispatch(setLeader(null));
         dispatch(resetFollowers());
+        dispatch(setBeneficiary(null));
         await getTasks();
         navigation.navigate("tasks");
       })
@@ -146,9 +153,11 @@ export default function AddNewTask({ navigation }) {
       : words[0][0] + words[0][1];
   };
 
+  console.log("beneficiary state", beneficiary);
+
   return (
-    <ScrollView className="pb-[300px]">
-      <SafeAreaView style={{ flex: 1 }}>
+    <ScrollView>
+      <SafeAreaView>
         <View style={styles.header}>
           <View style={{ flex: 1, justifyContent: "center", paddingLeft: 40 }}>
             <View style={{ flexDirection: "row" }}>
@@ -364,8 +373,31 @@ export default function AddNewTask({ navigation }) {
               </TouchableOpacity>
               <Text style={styles.txt5}> > </Text>
             </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("beneficiary");
+              }}
+            >
+              <View className="px-6 my-6 flex flex-row justify-between items-center">
+                <View>
+                  <AntIcon color={"#dddddd"} name="user" />
+                </View>
+                <View>
+                  <Text className="text-white font-bold">
+                    Select Beneficiary
+                  </Text>
+                  <Text className="text-white/70">
+                    Select specefic person for the task
+                  </Text>
+                </View>
+                <View>
+                  <FeatherIcon color={"#dddddd"} name="chevron-right" />
+                </View>
+              </View>
+            </TouchableOpacity>
             <View style={{ alignItems: "center" }}>
-              <View style={{ flexDirection: "row", paddingTop: 80 }}>
+              <View style={{ flexDirection: "row", paddingTop: 10 }}>
                 <TouchableOpacity style={styles.btn} onPress={handleNewTask}>
                   <Text style={styles.txt1}>ADD TASK </Text>
                 </TouchableOpacity>

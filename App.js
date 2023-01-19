@@ -23,11 +23,13 @@ import Alert from "./Screens/alert";
 import TaskDetails1 from "./Screens/taskDetails1";
 import AddNewTask from "./Screens/AddNewTask";
 import ModifyTask from "./Screens/modifyTask";
+import Beneficiary from "./Screens/Benificiary";
 import Edit1 from "./Screens/edit1";
 import ChangePass from "./Screens/changepass";
 import { Provider } from "react-redux";
 import store from "./store";
 import { registerTranslation } from "react-native-paper-dates";
+import ForgotPassword from "./Screens/ForgotPassword";
 
 const Stack = createStackNavigator();
 
@@ -118,6 +120,8 @@ export default function App() {
           <Stack.Screen name="myLeadingTask1" component={MyLeadingTask1} />
           <Stack.Screen name="edit1" component={Edit1} />
           <Stack.Screen name="changepass" component={ChangePass} />
+          <Stack.Screen name="forgotpass" component={ForgotPassword} />
+          <Stack.Screen name="beneficiary" component={Beneficiary} />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
