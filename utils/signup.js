@@ -20,6 +20,7 @@ async function signup(fullname, designation, orgainization, fathername, password
 
     return r.data;
   } catch (e) {
+    console.log(e.response);
     if (e.response && e.response.data) {
       return e.response.data;
     }
