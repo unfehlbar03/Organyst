@@ -3,13 +3,10 @@ import axios from "axios";
 async function forgotPassword(email, password) {
   console.log(email, password);
   try {
-    const r = await axios.post(
-      "http://192.168.29.170:5002/api/forgot-password",
-      {
-        email,
-        password,
-      }
-    );
+    const r = await axios.post("http://20.219.16.124:5001/api/forgot-password", {
+      email,
+      password,
+    });
 
     return r.data;
   } catch (e) {
