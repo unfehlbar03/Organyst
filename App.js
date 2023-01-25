@@ -30,6 +30,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { registerTranslation } from "react-native-paper-dates";
 import ForgotPassword from "./Screens/ForgotPassword";
+import AddNewWorkPlace from "./Screens/AddNewWorkplace";
+import MembersScreen from "./Screens/MembersScreen";
 
 const Stack = createStackNavigator();
 
@@ -108,6 +110,15 @@ export default function App() {
           <Stack.Screen name="verification_code" component={Vcode} />
           <Stack.Screen name="taskDetails" component={TaskDetails} />
           <Stack.Screen name="AddNewTask" component={AddNewTask} />
+          <Stack.Screen name="AddNewWorkplace" component={AddNewWorkPlace} />
+          <Stack.Screen
+            name="MemberScreen"
+            component={MembersScreen}
+            options={{
+              presentation: "modal",
+              headerShown: false,
+            }}
+          />
           <Stack.Screen name="modifyTask" component={ModifyTask} />
           <Stack.Screen name="taskDetails1" component={TaskDetails1} />
           <Stack.Screen name="deleteTask" component={DeleteTask} />

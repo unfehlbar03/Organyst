@@ -3,7 +3,7 @@ import axios from "axios";
 async function addTask(token, data) {
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/add-new-task`,
+      `http://192.168.29.170:5001/api/add-new-task`,
       {
         taskname: data.name,
         subject: data.subject,
@@ -16,6 +16,7 @@ async function addTask(token, data) {
         followers: data.followers,
         leader: data.leader,
         beneficiary: data.beneficiary,
+        workplace_id: data.workplace_id,
       },
       {
         headers: {

@@ -2,53 +2,96 @@ import { View, Text, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAction, setAction } from "../features/appSlice";
 const TaskModal = ({ open, setOpen }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const action = useSelector(selectAction);
+  console.log("Action", action);
   return (
     <View>
       <Modal transparent={true} visible={open} animationType="fade">
         <BlurView blurType="light" style={styles.contentWrap}>
           <View style={styles.modalView}>
             <TouchableOpacity>
-              <Text style={styles.txt10} onPress={() => setOpen(false)}>
+              <Text
+                style={styles.txt10}
+                onPress={() => {
+                  setOpen(false);
+                  dispatch(setAction(false));
+                }}
+              >
                 x
               </Text>
             </TouchableOpacity>
             <Text style={styles.txt8}>What do you want to do? </Text>
-            <View
-              style={{
-                flexDirection: "column",
-                paddingLeft: 35,
-                paddingTop: 40,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  setOpen(false);
-                  navigation.navigate("AddNewTask");
+            {action ? (
+              <View
+                style={{
+                  flexDirection: "column",
+                  paddingLeft: 35,
+                  paddingTop: 40,
                 }}
               >
-                <View style={styles.btn}>
-                  <Text style={styles.txt9}>ADD</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingTop: 20 }}
-                onPress={() => navigation.navigate("modifyTask")}
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpen(false);
+                    action === "Workplace"
+                      ? navigation.navigate("AddNewWorkplace")
+                      : navigation.navigate("AddNewTask");
+                  }}
+                >
+                  <View style={styles.btn}>
+                    <Text style={styles.txt9}>ADD</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ paddingTop: 20 }}
+                  onPress={() => navigation.navigate("modifyTask")}
+                >
+                  <View style={styles.btn1}>
+                    <Text style={styles.txt9}>MODIFY</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ paddingTop: 20 }}
+                  onPress={() => navigation.navigate("deleteTask")}
+                >
+                  <View style={styles.btn2}>
+                    <Text style={styles.txt9}>DELETE</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: "column",
+                  paddingLeft: 35,
+                  paddingTop: 40,
+                }}
               >
-                <View style={styles.btn1}>
-                  <Text style={styles.txt9}>MODIFY</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingTop: 20 }}
-                onPress={() => navigation.navigate("deleteTask")}
-              >
-                <View style={styles.btn2}>
-                  <Text style={styles.txt9}>DELETE</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(setAction("Task"));
+                  }}
+                >
+                  <View className="w-[245px] px-2 py-1 bg-purple-400 h-12 rounded-full flex items-center justify-center">
+                    <Text className="text-white font-bold">ADD Task</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ paddingTop: 20 }}
+                  onPress={() => {
+                    dispatch(setAction("Workplace"));
+                  }}
+                >
+                  <View className="w-[245px] px-2 py-1 bg-green-400 h-12 rounded-full flex items-center justify-center">
+                    <Text className="text-white font-bold">Add Workplace</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </BlurView>
       </Modal>

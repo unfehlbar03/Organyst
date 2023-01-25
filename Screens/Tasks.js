@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Modal, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Button } from "react-native";
+import {
+  StyleSheet,
+  Modal,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  Button,
+  FlatList,
+} from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -10,10 +21,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../features/authSlice";
 import fetchUsers from "../utils/get-users";
 import { useIsFocused } from "@react-navigation/native";
-import { setLeader, setUsers, selectTasks, setTasks } from "../features/appSlice";
+import {
+  setLeader,
+  setUsers,
+  selectTasks,
+  setTasks,
+  setWorkplaces,
+  selectWorkplaces,
+  setActiveWorkplace,
+  selectActiveWorkplace,
+} from "../features/appSlice";
 import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
 import Avatar from "../components/Avatar";
+import fetchWorkplace from "../utils/fetchWorkplaces";
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +42,9 @@ export default function Tasks({ router, navigation }) {
   const dispatch = useDispatch();
   const tasks = useSelector(selectTasks);
   const user = useSelector(selectUser);
+  const activeWorkplace = useSelector(selectActiveWorkplace);
+
+  const workplaces = useSelector(selectWorkplaces);
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@jwt_token");
@@ -60,14 +84,25 @@ export default function Tasks({ router, navigation }) {
         dispatch(setTasks(tasks.data));
       }
     }
+
+    async function getWorkplaces() {
+      const token = await getToken();
+      const workplaces = await fetchWorkplace(token);
+      console.log("Workplaces", workplaces);
+      dispatch(setWorkplaces(workplaces.data));
+      dispatch(setActiveWorkplace(workplaces.data[0]._id));
+    }
     getUserInfo();
     getTasks();
     getUsers();
+    getWorkplaces();
   }, [isFocused]);
+
+  console.log("Active Workplace", activeWorkplace);
 
   return (
     <SafeAreaView className="relative h-screen">
-      <View className=" py-16 pt-24 px-12 flex flex-col items-center justify-center">
+      <View className="py-4 pt-16 px-4 flex flex-col items-center justify-center">
         <View className="flex w-[90%] flex-row  justify-between">
           <TouchableOpacity
             onPress={() => {
@@ -81,22 +116,70 @@ export default function Tasks({ router, navigation }) {
               navigation.navigate("tasks");
             }}
           >
-            <UserNavOption type="icon" name="list" caption={"Tasks"} user={false} />
+            <UserNavOption
+              type="icon"
+              name="list"
+              caption={"Tasks"}
+              user={false}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("alert");
             }}
           >
-            <UserNavOption type="icon" name="alert" caption={"Alerts"} user={false} />
+            <UserNavOption
+              type="icon"
+              name="alert"
+              caption={"Alerts"}
+              user={false}
+            />
           </TouchableOpacity>
+        </View>
+        <View className="w-full mt-8">
+          <FlatList
+            data={workplaces}
+            horizontal
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(setActiveWorkplace(item._id));
+                }}
+              >
+                <View
+                  className={`h-10 ${
+                    activeWorkplace === item._id
+                      ? "bg-purple-200"
+                      : "bg-gray-300"
+                  } mr-3 px-2 flex items-center justify-center rounded-full`}
+                >
+                  <Text
+                    className={`${
+                      activeWorkplace === item._id
+                        ? "text-purple-600"
+                        : "text-black"
+                    } font-bold`}
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       </View>
       <ScrollView>
         {tasks?.map((task, i) => {
           return (
             <TouchableOpacity
-              className={`${i % 3 == 0 ? "bg-pink-400" : i % 3 == 1 ? "bg-teal-700" : "bg-purple-700"} py-10 pb-12`}
+              className={`${
+                i % 3 == 0
+                  ? "bg-pink-400"
+                  : i % 3 == 1
+                  ? "bg-teal-700"
+                  : "bg-purple-700"
+              } py-10 pb-12`}
               onPress={() => navigation.navigate("taskView", { id: task._id })}
               key={i}
             >
@@ -104,13 +187,21 @@ export default function Tasks({ router, navigation }) {
                 <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
                   <View>
                     <Text className="text-white/50">TODAY 5:30 PM</Text>
-                    <Text className="text-white/90 text-2xl font-bold">{task.taskname}</Text>
+                    <Text className="text-white/90 text-2xl font-bold">
+                      {task.taskname}
+                    </Text>
                   </View>
                   <View>
                     {task.priority === "High" ? (
-                      <Image source={require("../assets/red-flag.png")} className="h-8 pr-12" />
+                      <Image
+                        source={require("../assets/red-flag.png")}
+                        className="h-8 pr-12"
+                      />
                     ) : (
-                      <Image source={require("../assets/green-flag.png")} className="h-8 pr-12" />
+                      <Image
+                        source={require("../assets/green-flag.png")}
+                        className="h-8 pr-12"
+                      />
                     )}
                   </View>
                 </View>
@@ -118,10 +209,20 @@ export default function Tasks({ router, navigation }) {
                   <View className="flex flex-row relative">
                     {task.followers.slice(0, 2).map((fl, index) => {
                       console.log(fl);
-                      return <Avatar follower_id={fl} color={index % 2 == 0 ? "bg-purple-500" : "bg-green-500"} key={index} />;
+                      return (
+                        <Avatar
+                          follower_id={fl}
+                          color={
+                            index % 2 == 0 ? "bg-purple-500" : "bg-green-500"
+                          }
+                          key={index}
+                        />
+                      );
                     })}
                   </View>
-                  <Text className="text-white/50">Join Marie,John & 10 others</Text>
+                  <Text className="text-white/50">
+                    Join Marie,John & 10 others
+                  </Text>
                 </View>
               </View>
               <View style={styles.flag}></View>

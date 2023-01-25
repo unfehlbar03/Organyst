@@ -1,6 +1,16 @@
 import axios from "axios";
 
-async function signup(fullname, designation, orgainization, fathername, password, mobile, email, aadhar, dob) {
+async function signup(
+  fullname,
+  designation,
+  orgainization,
+  fathername,
+  password,
+  mobile,
+  email,
+  aadhar,
+  dob
+) {
   try {
     const r = await axios.post(
       `http://20.219.16.124:5001/api/register`, //edit the url to local ip of current host
@@ -16,15 +26,13 @@ async function signup(fullname, designation, orgainization, fathername, password
         dateofbirth: dob,
       }
     );
-    console.log(r.data);
+    console.log("Response", r.data);
 
     return r.data;
   } catch (e) {
-    console.log(e.response);
     if (e.response && e.response.data) {
-      return e.response.data;
+      return false;
     }
-    return false;
   }
 }
 

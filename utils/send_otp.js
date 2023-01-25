@@ -2,7 +2,7 @@ import axios from "axios";
 
 async function sendOtp(email) {
   try {
-    const r = await axios.post(`http://192.168.29.170:5002/api/send-otp`, {
+    const r = await axios.post(`http://20.219.16.124:5001/api/send-otp`, {
       email,
     });
 
