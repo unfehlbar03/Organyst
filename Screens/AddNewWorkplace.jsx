@@ -53,7 +53,6 @@ export default function AddNewWorkPlace({ navigation }) {
     })
       .then(async (res) => {
         const { data } = res;
-        console.log("Data", data);
         dispatch(resetWorkplaceMembers());
         dispatch(setAction(false));
         Alert.alert("Workplace Created");

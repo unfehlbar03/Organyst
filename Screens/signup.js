@@ -43,7 +43,6 @@ export default function Signup({ navigation }) {
       dob
     );
 
-    console.log(response);
     if (response) {
       navigation.navigate("phoneNumber", {
         email: email,

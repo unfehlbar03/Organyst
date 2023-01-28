@@ -48,10 +48,6 @@ export default function TaskDetails({ navigation }) {
     }
 
     navigation.navigate("taskDetails1");
-
-    alert(result.uri);
-
-    console.log(result);
   };
   return (
     <ScrollView>

@@ -1,13 +1,11 @@
 import axios from "axios";
 
-async function addWorkplace(token, data) {
+async function switchWorkplace(token, workspace) {
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/workspace/create`,
+      `http://20.219.16.124:5001/api/profile/workspace/switch`,
       {
-        name: data.name,
-        description: data.description,
-        members: data.members,
+        workspace,
       },
       {
         headers: {
@@ -26,4 +24,4 @@ async function addWorkplace(token, data) {
   }
 }
 
-export default addWorkplace;
+export default switchWorkplace;

@@ -25,7 +25,6 @@ export default function Vcode({ route, navigation }) {
   const handleVerify = async () => {
     let otp = char1 + char2 + char3 + char4;
     const verify_response = await verifyOtp(otp, email);
-    console.log("verification response", verify_response);
     if (verify_response.status === "success") {
       navigation.navigate("signin");
     }

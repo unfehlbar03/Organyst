@@ -5,14 +5,13 @@ import getProfile from "../utils/getProfile";
 import getToken from "../utils/getToken";
 
 function TaskFollower({ follower }) {
-  console.log("item", follower);
   const navigation = useNavigation();
   const [person, setPerson] = React.useState(null);
   React.useEffect(() => {
     async function fetchProfile() {
       const token = await getToken();
       const p = await getProfile(token, follower);
-      console.log(p);
+
       setPerson(p.data);
     }
     if (follower) {

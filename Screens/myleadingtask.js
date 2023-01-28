@@ -17,7 +17,7 @@ export default function Myleading({ navigation }) {
     async function fetchMyLeadTasks() {
       const token = await getToken();
       const t = await fetchLeadingTasks(token);
-      console.log(t);
+
       setTasks(t.data);
     }
     fetchMyLeadTasks();

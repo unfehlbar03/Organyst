@@ -21,7 +21,7 @@ export default function ForgotPassword({ navigation }) {
       return Alert.alert("Please enter all fields");
     }
     const response = await forgotPassword(email, pass);
-    console.log(response);
+
     const { status } = response;
     if (status !== "success") {
       Alert.alert("Error in forgoting password");

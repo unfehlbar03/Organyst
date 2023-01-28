@@ -4,14 +4,13 @@ import getProfile from "../utils/getProfile";
 import getToken from "../utils/getToken";
 
 const Avatar = ({ follower_id, color }) => {
-  console.log("FollowerId", follower_id);
   const [person, setPerson] = React.useState();
 
   React.useEffect(() => {
     async function fetchPerson() {
       const token = await getToken();
       const response = await getProfile(token, follower_id);
-      console.log("person", response);
+
       setPerson(response.data);
     }
 

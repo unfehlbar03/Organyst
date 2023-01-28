@@ -8,12 +8,14 @@ import Signup from "./Screens/signup";
 import Vcode from "./Screens/verification_code";
 import Phone from "./Screens/phoneNumber";
 import Tasks from "./Screens/Tasks";
+import Workspaces from "./Screens/Workspaces";
 import YourProfile from "./Screens/Yourprofile";
 import ProfileViewOne from "./Screens/profileView1";
 import ProfileViewTwo from "./Screens/profileView2";
 import Myleading from "./Screens/myleadingtask";
 import Myfollowing from "./Screens/myfollowingtask";
 import SelectLeaders from "./Screens/selectLeaders";
+import ModifyWorkplace from "./Screens/ModifyWorkplace";
 import SelectFollowers from "./Screens/selectFollowers";
 import MyLeadingTask1 from "./Screens/myLeadingTask1";
 import DeleteTask from "./Screens/deleteTask";
@@ -103,6 +105,7 @@ export default function App() {
           <Stack.Screen name="signin" component={Signin1} />
           <Stack.Screen name="signup" component={Signup} />
           <Stack.Screen name="tasks" component={Tasks} />
+          <Stack.Screen name="modifyworkplace" component={ModifyWorkplace} />
           <Stack.Screen name="YourProfile" component={YourProfile} />
           <Stack.Screen name="taskView" component={ViewTask} />
           <Stack.Screen name="phoneNumber" component={Phone} />
@@ -119,6 +122,7 @@ export default function App() {
               headerShown: false,
             }}
           />
+          <Stack.Screen name="workplaces" component={Workspaces} />
           <Stack.Screen name="modifyTask" component={ModifyTask} />
           <Stack.Screen name="taskDetails1" component={TaskDetails1} />
           <Stack.Screen name="deleteTask" component={DeleteTask} />

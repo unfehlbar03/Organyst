@@ -1,14 +1,9 @@
 import axios from "axios";
 
-async function addWorkplace(token, data) {
+async function removeWorkplace(token, id) {
   try {
-    const r = await axios.post(
-      `http://20.219.16.124:5001/api/workspace/create`,
-      {
-        name: data.name,
-        description: data.description,
-        members: data.members,
-      },
+    const r = await axios.delete(
+      `http://20.219.16.124:5001/api/workspace/${id}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -26,4 +21,4 @@ async function addWorkplace(token, data) {
   }
 }
 
-export default addWorkplace;
+export default removeWorkplace;

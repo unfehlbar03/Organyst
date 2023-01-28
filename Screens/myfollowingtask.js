@@ -17,7 +17,7 @@ export default function Myfollowing({ navigation }) {
     async function FollowingTasks() {
       const token = await getToken();
       const t = await fetchFollowingTasks(token);
-      console.log(t);
+
       setTasks(t.data);
     }
     FollowingTasks();

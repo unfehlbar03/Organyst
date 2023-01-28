@@ -10,8 +10,10 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  FlatList,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import DropDownPicker from "react-native-dropdown-picker";
 import {
   resetFollowers,
   selectLeader,
@@ -20,6 +22,8 @@ import {
   selectBeneficiary,
   setBeneficiary,
   selectActiveWorkplace,
+  selectWorkplaces,
+  setActiveWorkplace,
 } from "../features/appSlice";
 import addTask from "../utils/addTask";
 import { selectUser } from "../features/authSlice";
@@ -33,13 +37,20 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 export default function AddNewTask({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [Open, setOPEN] = useState(false);
   const [name, setName] = useState("");
+  const [workflow, setWorkflow] = useState("");
+  const [items, setItems] = useState([
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+  ]);
   const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
   const [priority, setPriority] = useState("Low");
   const leader = useSelector(selectLeader);
   const beneficiary = useSelector(selectBeneficiary);
   const followers = useSelector(selectTaskFollowers);
+  const workplaces = useSelector(selectWorkplaces);
   const user = useSelector(selectUser);
   const workplace_id = useSelector(selectActiveWorkplace);
   const dispatch = useDispatch();
@@ -156,13 +167,11 @@ export default function AddNewTask({ navigation }) {
       : words[0][0] + words[0][1];
   };
 
-  console.log("beneficiary state", beneficiary);
-
   return (
-    <ScrollView className="pb-[300px]">
+    <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
-          <View style={{ flex: 1, justifyContent: "center", paddingLeft: 40 }}>
+          <View style={{ flex: 1, justifyContent: "center", paddingLeft: 12 }}>
             <View style={{ flexDirection: "row" }}>
               <View
                 style={{
@@ -222,6 +231,42 @@ export default function AddNewTask({ navigation }) {
                     underlineColorAndroid={"#8a56ac"}
                     defaultValue={description}
                     onChangeText={(text) => setDescription(text)}
+                  />
+                </View>
+
+                <View className="px-4 my-4">
+                  <Text className="text-[#9599b3] font-bold mb-4">
+                    Choose Workflow
+                  </Text>
+                  <FlatList
+                    data={workplaces}
+                    horizontal
+                    renderItem={({ item, index }) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          dispatch(setActiveWorkplace(item._id));
+                        }}
+                      >
+                        <View
+                          className={`h-10 ${
+                            workplace_id === item._id
+                              ? "bg-purple-200"
+                              : "bg-gray-300"
+                          } mr-3 px-2 flex items-center justify-center rounded-full`}
+                        >
+                          <Text
+                            className={`${
+                              workplace_id === item._id
+                                ? "text-purple-600"
+                                : "text-black"
+                            } font-bold`}
+                          >
+                            {item.name}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                    showsHorizontalScrollIndicator={false}
                   />
                 </View>
               </View>
@@ -397,7 +442,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   bottom: {
-    height: 700,
     backgroundColor: "#241332",
   },
   inp1: {
@@ -450,7 +494,6 @@ const styles = StyleSheet.create({
     paddingLeft: 120,
   },
   btn1: {
-    width: 170,
     backgroundColor: "#707070",
     borderTopLeftRadius: 30,
     borderBottomLeftRadius: 30,
@@ -462,7 +505,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btn2: {
-    width: 170,
     backgroundColor: "#707070",
     borderTopRightRadius: 30,
     borderBottomRightRadius: 30,

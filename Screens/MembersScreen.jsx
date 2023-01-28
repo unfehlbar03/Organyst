@@ -19,9 +19,6 @@ const MembersScreen = ({ route, navigation }) => {
   const handleAddMembers = (item) => {
     dispatch(setWorkplaceMembers(item._id));
     const i = members.filter((Item) => Item === item);
-    console.log(i);
-
-    // console.log(item);
   };
 
   const handleRemoveMembers = (id) => {
@@ -29,11 +26,10 @@ const MembersScreen = ({ route, navigation }) => {
   };
   const isMemberPresent = (id) => {
     const index = members.findIndex((i) => i == id);
-    console.log("Index", index);
+
     return index >= 0;
   };
 
-  console.log("Members", members);
   return (
     <SafeAreaView>
       <View className="px-8 py-12 h-screen relative">

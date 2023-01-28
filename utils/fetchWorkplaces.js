@@ -2,7 +2,7 @@ import axios from "axios";
 
 async function fetchWorkplace(token) {
   try {
-    const r = await axios.get(`http://192.168.29.170:5001/api/workspace/list`, {
+    const r = await axios.get(`http://20.219.16.124:5001/api/workspace/list`, {
       headers: {
         Authorization: "Bearer " + token,
       },

@@ -2,7 +2,6 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 
 const UserNavOption = ({ type, name, caption, user }) => {
-  console.log("User", user);
   const getFormattedInitial = () => {
     const words = user?.fullname.toUpperCase().split(" ");
     return words.length > 1
@@ -14,7 +13,9 @@ const UserNavOption = ({ type, name, caption, user }) => {
       {type === "avatar" && (
         <View className="w-full h-full bg-green-500 flex items-center justify-center rounded-full">
           <>
-            <Text className="text-white">{user && getFormattedInitial(user)}</Text>
+            <Text className="text-white">
+              {user && getFormattedInitial(user)}
+            </Text>
             <View className="px-2 py-1 bg-gray-500 absolute top-1 -right-1 rounded-full">
               <Text className="text-white">12</Text>
             </View>

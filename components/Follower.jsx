@@ -29,7 +29,7 @@ const Follower = ({ follower }) => {
 
   const handleFollowersAdd = () => {
     const index = followers.findIndex((fl) => fl === follower.id);
-    console.log(index);
+
     if (index === -1) {
       dispatch(setTaskFollowers(follower._id));
     }

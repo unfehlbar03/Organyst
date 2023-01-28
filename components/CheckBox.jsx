@@ -30,11 +30,9 @@ const CheckBox = ({ leader }) => {
 
   const isPersonAdded = () => {
     const is = ldr._id == leader._id;
-    console.log("Is present", is);
+
     setChecked(is);
   };
-
-  console.log(ldr, leader);
   return (
     <TouchableOpacity
       className="w-6 h-6 border border-gray-400 rounded-full"

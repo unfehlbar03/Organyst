@@ -8,10 +8,10 @@ const TaskModal = ({ open, setOpen }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const action = useSelector(selectAction);
-  console.log("Action", action);
+
   return (
     <View>
-      <Modal transparent={true} visible={open} animationType="fade">
+      <Modal transparent={false} visible={open} animationType="fade">
         <BlurView blurType="light" style={styles.contentWrap}>
           <View style={styles.modalView}>
             <TouchableOpacity>
@@ -21,11 +21,14 @@ const TaskModal = ({ open, setOpen }) => {
                   setOpen(false);
                   dispatch(setAction(false));
                 }}
+                className="text-black"
               >
                 x
               </Text>
             </TouchableOpacity>
-            <Text style={styles.txt8}>What do you want to do? </Text>
+            <Text style={styles.txt8} className="text-black">
+              What do you want to do?{" "}
+            </Text>
             {action ? (
               <View
                 style={{
@@ -37,31 +40,57 @@ const TaskModal = ({ open, setOpen }) => {
                 <TouchableOpacity
                   onPress={() => {
                     setOpen(false);
+                    dispatch(setAction(false));
                     action === "Workplace"
                       ? navigation.navigate("AddNewWorkplace")
                       : navigation.navigate("AddNewTask");
                   }}
                 >
-                  <View style={styles.btn}>
+                  <View
+                    style={styles.btn}
+                    className="items-center justify-center"
+                  >
                     <Text style={styles.txt9}>ADD</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={{ paddingTop: 20 }}
-                  onPress={() => navigation.navigate("modifyTask")}
-                >
-                  <View style={styles.btn1}>
-                    <Text style={styles.txt9}>MODIFY</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{ paddingTop: 20 }}
-                  onPress={() => navigation.navigate("deleteTask")}
-                >
-                  <View style={styles.btn2}>
-                    <Text style={styles.txt9}>DELETE</Text>
-                  </View>
-                </TouchableOpacity>
+                {
+                  <TouchableOpacity
+                    style={{ paddingTop: 20 }}
+                    onPress={() => {
+                      setOpen(false);
+                      dispatch(setAction(false));
+                      action === "Workplace"
+                        ? navigation.navigate("workplaces")
+                        : navigation.navigate("modifyTask");
+                    }}
+                  >
+                    <View
+                      style={styles.btn1}
+                      className="items-center justify-center"
+                    >
+                      <Text style={styles.txt9}>
+                        {action == "Workplace" ? "View Workplaces" : "MODIFY"}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                }
+                {action !== "Workplace" && (
+                  <TouchableOpacity
+                    style={{ paddingTop: 20 }}
+                    onPress={() => {
+                      setOpen(false);
+                      dispatch(setAction(false));
+                      navigation.navigate("deleteTask");
+                    }}
+                  >
+                    <View
+                      style={styles.btn2}
+                      className="items-center justify-center"
+                    >
+                      <Text style={styles.txt9}>DELETE</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
               </View>
             ) : (
               <View
@@ -77,7 +106,7 @@ const TaskModal = ({ open, setOpen }) => {
                   }}
                 >
                   <View className="w-[245px] px-2 py-1 bg-purple-400 h-12 rounded-full flex items-center justify-center">
-                    <Text className="text-white font-bold">ADD Task</Text>
+                    <Text className="text-white font-bold">Tasks</Text>
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -87,7 +116,7 @@ const TaskModal = ({ open, setOpen }) => {
                   }}
                 >
                   <View className="w-[245px] px-2 py-1 bg-green-400 h-12 rounded-full flex items-center justify-center">
-                    <Text className="text-white font-bold">Add Workplace</Text>
+                    <Text className="text-white font-bold">Workplaces</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -197,7 +226,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   txt8: {
-    color: "white",
     fontSize: 24,
     paddingTop: 10,
     paddingLeft: 24,
@@ -206,9 +234,8 @@ const styles = StyleSheet.create({
   modalView: {
     width: 327,
     height: 355,
-    borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: "#241332",
+    backgroundColor: "#ffffff",
   },
   contentWrap: {
     flex: 1,
@@ -248,12 +275,10 @@ const styles = StyleSheet.create({
   txt9: {
     color: "white",
     fontSize: 14,
-    paddingTop: 10,
-    paddingLeft: 100,
+
     fontWeight: "bold",
   },
   txt10: {
-    color: "white",
     fontSize: 24,
     paddingTop: 10,
     paddingLeft: 20,

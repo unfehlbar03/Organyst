@@ -35,7 +35,6 @@ export default function TaskView({ route, navigation }) {
     init();
   }, [id]);
 
-  console.log("Task detail", task);
   return (
     <SafeAreaView style={{ paddingTop: 50, elevation: 5 }}>
       <View style={styles.header}>

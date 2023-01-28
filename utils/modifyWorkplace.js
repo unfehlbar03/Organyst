@@ -1,13 +1,13 @@
 import axios from "axios";
 
-async function addWorkplace(token, data) {
+async function modifyWorkplace(token, id, data) {
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/workspace/create`,
+      `http://20.219.16.124:5001/api/workspace/${id}`,
+
       {
         name: data.name,
         description: data.description,
-        members: data.members,
       },
       {
         headers: {
@@ -15,7 +15,6 @@ async function addWorkplace(token, data) {
         },
       }
     );
-
     return r.data;
   } catch (e) {
     if (e.response && e.response.data) {
@@ -26,4 +25,4 @@ async function addWorkplace(token, data) {
   }
 }
 
-export default addWorkplace;
+export default modifyWorkplace;

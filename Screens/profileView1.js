@@ -22,7 +22,7 @@ export default function ProfileViewOne({ route, navigation }) {
       try {
         const token = await getToken();
         const u = await getProfile(token, id);
-        console.log(u);
+
         setU(u.data);
       } catch (e) {
         console.log(e);
@@ -32,7 +32,6 @@ export default function ProfileViewOne({ route, navigation }) {
       getProfileData();
     }
   }, [id]);
-  console.log(id);
   return (
     <SafeAreaView>
       <ScrollView>

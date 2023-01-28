@@ -26,7 +26,6 @@ async function signup(
         dateofbirth: dob,
       }
     );
-    console.log("Response", r.data);
 
     return r.data;
   } catch (e) {

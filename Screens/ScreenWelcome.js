@@ -16,7 +16,7 @@ export default function Header({ navigation }) {
     getToken().then((t) => {
       if (t) {
         setRendered(true);
-        navigation.navigate("tasks");
+        navigation.replace("tasks");
       }
     });
   }, []);

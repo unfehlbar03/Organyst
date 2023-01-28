@@ -17,7 +17,7 @@ export default function Phone({ route, navigation }) {
 
   const handleSendotp = async () => {
     const otp_response = await sendOtp(email);
-    console.log(otp_response);
+
     navigation.navigate("verification_code", {
       email: email,
     });

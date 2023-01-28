@@ -28,7 +28,6 @@ export default function ChangePass({ navigation }) {
       pass,
       confirmPass
     );
-    console.log(response);
   };
 
   return (

@@ -1,5 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  Alert,
+} from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getUser from "../utils/get-user-info";
@@ -23,7 +32,6 @@ export default function YourProfile({ navigation }) {
     navigation.replace("signin", alert("You have signed out"));
   };
 
-  console.log(u);
   return (
     <ScrollView>
       <SafeAreaView>
@@ -41,20 +49,33 @@ export default function YourProfile({ navigation }) {
                 navigation.navigate("tasks");
               }}
             >
-              <UserNavOption type="icon" name="list" caption={"Tasks"} user={false} />
+              <UserNavOption
+                type="icon"
+                name="list"
+                caption={"Tasks"}
+                user={false}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("alert");
               }}
             >
-              <UserNavOption type="icon" name="alert" caption={"Alerts"} user={false} />
+              <UserNavOption
+                type="icon"
+                name="alert"
+                caption={"Alerts"}
+                user={false}
+              />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.aline}>
           <View>
-            <Image style={{ height: 300, width: "100%" }} source={require("../assets/Ava.png")} />
+            <Image
+              style={{ height: 300, width: "100%" }}
+              source={require("../assets/Ava.png")}
+            />
           </View>
           {u && (
             <View style={styles.textaline}>
@@ -66,7 +87,10 @@ export default function YourProfile({ navigation }) {
           <View>
             <View style={styles.aline2}>
               <TouchableOpacity>
-                <Text style={styles.txt6} onPress={() => navigation.navigate("myleadingtask")}>
+                <Text
+                  style={styles.txt6}
+                  onPress={() => navigation.navigate("myleadingtask")}
+                >
                   My Task
                 </Text>
                 <View style={styles.aline3}>
