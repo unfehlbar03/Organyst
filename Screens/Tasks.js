@@ -62,6 +62,7 @@ export default function Tasks({ router, navigation }) {
     async function getUserInfo() {
       if (await getToken()) {
         let token = await getToken();
+        console.log(token);
         const user = await getUser(token);
         dispatch(setUser(user.data));
       } else {

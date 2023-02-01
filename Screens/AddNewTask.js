@@ -111,6 +111,9 @@ export default function AddNewTask({ navigation }) {
     if (!leader) {
       return Alert.alert("Make sure leader assigned for this task");
     }
+    if (followers.length === 0) {
+      return Alert.alert("Make sure followers assigned for this task");
+    }
     const token = await getToken();
     const endTime = time.hours + ":" + time.minutes;
     addTask(token, {

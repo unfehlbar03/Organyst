@@ -18,7 +18,6 @@ const MembersScreen = ({ route, navigation }) => {
 
   const handleAddMembers = (item) => {
     dispatch(setWorkplaceMembers(item._id));
-    const i = members.filter((Item) => Item === item);
   };
 
   const handleRemoveMembers = (id) => {

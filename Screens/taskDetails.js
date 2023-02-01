@@ -3,38 +3,82 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  ImageBackground,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  ImageBackgroundBase,
   Modal,
   Alert,
 } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import * as DocumentPicker from "expo-document-picker";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
-import { Camera } from "expo-camera";
-import * as Permissions from "expo-permissions";
+import completeTask from "../utils/submitTask";
+import getToken from "../utils/getToken";
+import submitTaskByDocument from "../utils/submitTaskbyDocument";
 
-export default function TaskDetails({ navigation }) {
+export default function TaskDetails({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [modal2Open, setModal2Open] = useState(false);
+  const { task } = route.params;
+  const [file, setFile] = useState(false);
+  const [mediaType, setMediaType] = useState("Image");
+  const [done, setDone] = useState(task?.completed);
+  const [step, setStep] = useState(0);
+
+  console.log(task);
   let openImagePickerAsync = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    try {
+      let permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        alert("Permission to access camera roll is required!");
+        return;
+      }
+
+      let pickerResult = await ImagePicker.launchImageLibraryAsync();
+      if (pickerResult.canceled) {
+        setFile(false);
+        setModalOpen(false);
+      } else {
+        console.log(pickerResult);
+        setFile(pickerResult.assets[0]);
+        setMediaType("Image");
+        setStep(2);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  let openCamera = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
+      alert("You've refused to allow this appp to access your camera!");
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    const result = await ImagePicker.launchCameraAsync();
+
+    // Explore the result
+    if (result.canceled) {
+      setModalOpen(false);
+      setDone(false);
+    } else {
+      setFile(result.assets[0]);
+
+      if (!result.cancelled) {
+        setStep(2);
+      } else {
+        setFile(false);
+        setModalOpen(false);
+      }
+    }
   };
 
   let _pickDocument = async () => {
-    const allowedFiles = ["application/pdf"];
     let result = await DocumentPicker.getDocumentAsync({});
     const { size } = result;
 
@@ -42,18 +86,69 @@ export default function TaskDetails({ navigation }) {
       return Alert.alert("Make sure file size not exceed 5mb");
     }
 
-    if (!allowedFiles.includes(result.mimeType)) {
-      Alert.alert("Choosen file is not a pdf try again!");
-      return;
-    }
+    setMediaType("Document");
 
-    navigation.navigate("taskDetails1");
+    setFile(result);
+    setStep(2);
   };
+
+  // handle Task Complete
+
+  const taskSubmit = async () => {
+    const token = await getToken();
+    const getRandomName = new Date().getTime() + ".jpeg";
+
+    let nameParts = file.fileName
+      ? file.fileName.split(".")
+      : getRandomName.split(".");
+    let fileType = nameParts[nameParts.length - 1];
+
+    var fileToUpload = {
+      name: file.fileName ? file.fileName : getRandomName,
+      size: file.fileSize,
+      uri: file.uri,
+      type: "application/" + fileType,
+    };
+
+    const r = await completeTask(task._id, token, fileToUpload);
+
+    if (r.status === "success") {
+      Alert.alert("Task submitted");
+      setDone(true);
+    } else {
+      Alert.alert("Error in completing Task");
+    }
+    setStep(0);
+    setModalOpen(false);
+  };
+
+  const handleTaskUploadByDocument = async () => {
+    const token = await getToken();
+    let nameParts = file.name.split(".");
+    let fileType = nameParts[nameParts.length - 1];
+
+    var fileToUpload = {
+      name: file.name,
+      size: file.size,
+      uri: file.uri,
+      type: "application/" + fileType,
+    };
+    const r = await submitTaskByDocument(task._id, token, fileToUpload);
+    if (r.status === "success") {
+      Alert.alert("Task submitted");
+      setDone(true);
+    } else {
+      Alert.alert("Error in completing Task");
+    }
+    setStep(0);
+    setModalOpen(false);
+  };
+
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.header}>
-        <View>
-          <View
+    <SafeAreaView style={styles.header}>
+      <ScrollView>
+        <View className="h-screen">
+          {/* <View
             style={{ flexDirection: "row", paddingLeft: 80, paddingTop: 80 }}
           >
             <Text style={styles.txt2}>Task 1</Text>
@@ -251,10 +346,174 @@ export default function TaskDetails({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
+          </View> */}
+
+          <View className="py-8 px-6 relative border-b border-gray-200">
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <View>
+                <Icon name="chevron-left" color={"#ffffff"} size={23} />
+              </View>
+            </TouchableOpacity>
+            <View className="flex-row justify-between mt-6">
+              <View>
+                <Text className="text-white text-2xl">{task?.taskname}</Text>
+                <Text className="text-white/50">Created on:4 Sept 2020</Text>
+              </View>
+              <View>
+                <Icon name="clock" color={"#ffffff"} size={28} />
+              </View>
+            </View>
           </View>
+
+          <View className="py-6 px-6">
+            <Text className="text-2xl text-white">{task?.subject}</Text>
+            <Text className="text-white/50 my-5">{task?.description}</Text>
+          </View>
+
+          <View className="w-full absolute bottom-16 flex items-center justify-center">
+            <TouchableOpacity
+              onPress={() => {
+                setModalOpen(true);
+              }}
+            >
+              <View className=" bg-blue-700 w-[210px] mx-auto h-[42px] items-center justify-center rounded-md">
+                <Text className="font-bold text-white">
+                  {!done ? "Upload File" : "Change File"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/*Modal Comes Here */}
+          <Modal transparent={true} visible={modalOpen} animationType="fade">
+            <BlurView blurType="light" style={styles.contentWrap}>
+              <View className="w-[90%] px-6 py-8 bg-[#241332] rounded-md">
+                <View>
+                  <Text
+                    className={`text-white ${
+                      step === 2 ? "text-left" : "text-center"
+                    } text-2xl font-bold`}
+                  >
+                    {step === 0 && "Choose file format"}
+                    {step === 1 && "What you want to do?"}
+                    {step === 2 && "Confirm?"}
+                  </Text>
+                  {step === 2 && (
+                    <Text className="text-white/50 my-3">
+                      Tap on tick if you want to confirm the upload otherwise
+                      tap on the cancel button to cancel it.
+                    </Text>
+                  )}
+
+                  {step === 2 && (
+                    <View className="justify-end flex-row">
+                      <View className="flex-row gap-2">
+                        <TouchableOpacity
+                          onPress={() => {
+                            setFile(false);
+                            setModalOpen(false);
+                            setStep(0);
+                          }}
+                        >
+                          <View className="w-10 h-10 bg-pink-500 flex items-center justify-center rounded-full">
+                            <MaterialIcon name="clear" color={"#ffffff"} />
+                          </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={
+                            mediaType === "Document"
+                              ? handleTaskUploadByDocument
+                              : taskSubmit
+                          }
+                        >
+                          <View className="w-10 h-10 bg-blue-500 flex items-center justify-center rounded-full">
+                            <MaterialIcon name="done" color={"#ffffff"} />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+                  {step === 0 && (
+                    <View className="w-full mt-3 items-center">
+                      <TouchableOpacity
+                        className="w-full mb-3"
+                        onPress={_pickDocument}
+                      >
+                        <View className="w-full bg-blue-700 h-[42px] items-center justify-center rounded-full">
+                          <Text className="text-white font-bold">PDF</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="w-full mb-3"
+                        onPress={() => {
+                          setStep(1);
+                        }}
+                      >
+                        <View className="w-full bg-pink-400 h-[42px] items-center justify-center rounded-full">
+                          <Text className="text-white font-bold">Image</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="w-full"
+                        onPress={() => {
+                          setModalOpen(false);
+                        }}
+                      >
+                        <View className="w-full bg-gray-500 h-[42px] items-center justify-center rounded-full">
+                          <Text className="text-white font-bold">Cancel</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+                  {step === 1 && (
+                    <View className="w-full mt-3 items-center">
+                      <TouchableOpacity
+                        className="w-full mb-3"
+                        onPress={openCamera}
+                      >
+                        <View className="w-full bg-blue-700 h-[42px] items-center justify-center rounded-full">
+                          <Text className="text-white font-bold">
+                            Take Photo
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="w-full mb-3"
+                        onPress={openImagePickerAsync}
+                      >
+                        <View className="w-full bg-pink-400 h-[42px] items-center justify-center rounded-full">
+                          <Text className="text-white font-bold">
+                            Choose Image
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="w-full"
+                        onPress={() => {
+                          setStep(0);
+                        }}
+                      >
+                        <View className="relative w-full bg-gray-500 h-[42px] items-center justify-center rounded-full flex-row">
+                          <View className="absolute left-3">
+                            <Icon name="chevron-left" color="#ffffff" />
+                          </View>
+                          <Text className="text-white font-bold">Go back</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </BlurView>
+          </Modal>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

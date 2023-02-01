@@ -10,6 +10,8 @@ import { setWorkplaces } from "../features/appSlice";
 
 const ModifyWorkplace = ({ route, navigation }) => {
   const { item } = route.params;
+
+  console.log("Workplace: ", item);
   const dispatch = useDispatch();
   const [change, setChange] = React.useState(false);
   const [name, setName] = React.useState(item.name);

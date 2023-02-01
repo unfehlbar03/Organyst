@@ -33,7 +33,7 @@ export const appSlice = createSlice({
 
     removeWorkplaceMembers: (state, action) => {
       const index = state.workplace_members.findIndex(
-        (fl) => fl === action.payload
+        (fl) => fl.id === action.payload
       );
       let newMembers = [...state.workplace_members];
 

@@ -11,7 +11,7 @@ const TaskModal = ({ open, setOpen }) => {
 
   return (
     <View>
-      <Modal transparent={false} visible={open} animationType="fade">
+      <Modal transparent={true} visible={open} animationType="fade">
         <BlurView blurType="light" style={styles.contentWrap}>
           <View style={styles.modalView}>
             <TouchableOpacity>
@@ -21,12 +21,12 @@ const TaskModal = ({ open, setOpen }) => {
                   setOpen(false);
                   dispatch(setAction(false));
                 }}
-                className="text-black"
+                className="text-white"
               >
                 x
               </Text>
             </TouchableOpacity>
-            <Text style={styles.txt8} className="text-black">
+            <Text style={styles.txt8} className="text-white">
               What do you want to do?{" "}
             </Text>
             {action ? (
@@ -50,7 +50,7 @@ const TaskModal = ({ open, setOpen }) => {
                     style={styles.btn}
                     className="items-center justify-center"
                   >
-                    <Text style={styles.txt9}>ADD</Text>
+                    <Text className="text-white font-bold">ADD</Text>
                   </View>
                 </TouchableOpacity>
                 {
@@ -68,7 +68,7 @@ const TaskModal = ({ open, setOpen }) => {
                       style={styles.btn1}
                       className="items-center justify-center"
                     >
-                      <Text style={styles.txt9}>
+                      <Text className="text-white font-bold">
                         {action == "Workplace" ? "View Workplaces" : "MODIFY"}
                       </Text>
                     </View>
@@ -87,7 +87,7 @@ const TaskModal = ({ open, setOpen }) => {
                       style={styles.btn2}
                       className="items-center justify-center"
                     >
-                      <Text style={styles.txt9}>DELETE</Text>
+                      <Text className="text-white font-bold">DELETE</Text>
                     </View>
                   </TouchableOpacity>
                 )}
@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   txt8: {
+    color: "white",
     fontSize: 24,
     paddingTop: 10,
     paddingLeft: 24,
@@ -234,8 +235,9 @@ const styles = StyleSheet.create({
   modalView: {
     width: 327,
     height: 355,
+    borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#241332",
   },
   contentWrap: {
     flex: 1,
@@ -275,10 +277,12 @@ const styles = StyleSheet.create({
   txt9: {
     color: "white",
     fontSize: 14,
-
+    paddingTop: 10,
+    paddingLeft: 100,
     fontWeight: "bold",
   },
   txt10: {
+    color: "white",
     fontSize: 24,
     paddingTop: 10,
     paddingLeft: 20,
