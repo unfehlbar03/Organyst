@@ -63,11 +63,9 @@ export default function SelectLeaders({ navigation }) {
         </View>
 
         {users?.length > 0 &&
-          users
-            ?.filter((u) => u._id !== user?._id)
-            .map((u) => {
-              return <LeaderComponent key={u._id} leader={u} />;
-            })}
+          users.map((u) => {
+            return <LeaderComponent key={u._id} leader={u} />;
+          })}
         <TouchableOpacity
           style={{ flex: 1, flexDirection: "column-reverse", paddingTop: 50 }}
           onPress={handleSelection}

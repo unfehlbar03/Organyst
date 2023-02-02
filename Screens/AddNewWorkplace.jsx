@@ -45,6 +45,10 @@ export default function AddNewWorkPlace({ navigation }) {
     if (members.length == 0) {
       return Alert.alert("Make sure members are selected for the workplace");
     }
+
+    if (description.length < 8) {
+      return Alert.alert("Please enter the description 8 character long");
+    }
     const token = await getToken();
     addWorkplace(token, {
       name,

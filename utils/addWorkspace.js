@@ -3,7 +3,7 @@ import axios from "axios";
 async function addWorkplace(token, data) {
   try {
     const r = await axios.post(
-      `http://192.168.29.171:5001/api/workspace/create`,
+      `http://20.219.16.124:5001/api/workspace/create`,
       {
         name: data.name,
         description: data.description,

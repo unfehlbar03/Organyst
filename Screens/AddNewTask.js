@@ -114,6 +114,11 @@ export default function AddNewTask({ navigation }) {
     if (followers.length === 0) {
       return Alert.alert("Make sure followers assigned for this task");
     }
+    if (!workflow) {
+      return Alert.alert(
+        "Make sure workflow assigned for this task if you not have any worplace Create New One."
+      );
+    }
     const token = await getToken();
     const endTime = time.hours + ":" + time.minutes;
     addTask(token, {
@@ -237,41 +242,43 @@ export default function AddNewTask({ navigation }) {
                   />
                 </View>
 
-                <View className="px-4 my-4">
-                  <Text className="text-[#9599b3] font-bold mb-4">
-                    Choose Workflow
-                  </Text>
-                  <FlatList
-                    data={workplaces}
-                    horizontal
-                    renderItem={({ item, index }) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          dispatch(setActiveWorkplace(item._id));
-                        }}
-                      >
-                        <View
-                          className={`h-10 ${
-                            workplace_id === item._id
-                              ? "bg-purple-200"
-                              : "bg-gray-300"
-                          } mr-3 px-2 flex items-center justify-center rounded-full`}
+                {workplaces.length > 0 && (
+                  <View className="px-4 my-4">
+                    <Text className="text-[#9599b3] font-bold mb-4">
+                      Choose Workflow
+                    </Text>
+                    <FlatList
+                      data={workplaces}
+                      horizontal
+                      renderItem={({ item, index }) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setWorkflow(item._id);
+                          }}
                         >
-                          <Text
-                            className={`${
-                              workplace_id === item._id
-                                ? "text-purple-600"
-                                : "text-black"
-                            } font-bold`}
+                          <View
+                            className={`h-10 ${
+                              workflow === item._id
+                                ? "bg-purple-200"
+                                : "bg-gray-300"
+                            } mr-3 px-2 flex items-center justify-center rounded-full`}
                           >
-                            {item.name}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                    showsHorizontalScrollIndicator={false}
-                  />
-                </View>
+                            <Text
+                              className={`${
+                                workplace_id === item._id
+                                  ? "text-purple-600"
+                                  : "text-black"
+                              } font-bold`}
+                            >
+                              {item.name}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  </View>
+                )}
               </View>
             </View>
             <View style={{ flexDirection: "row", paddingTop: 40 }}>

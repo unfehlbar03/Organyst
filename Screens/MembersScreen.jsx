@@ -10,12 +10,13 @@ import {
   selectWorkplaceMembers,
   setWorkplaceMembers,
 } from "../features/appSlice";
+import { selectUser } from "../features/authSlice";
 
 const MembersScreen = ({ route, navigation }) => {
   const users = useSelector(selectUsers);
   const members = useSelector(selectWorkplaceMembers);
   const dispatch = useDispatch();
-
+  const user = useSelector(selectUser);
   const handleAddMembers = (item) => {
     dispatch(setWorkplaceMembers(item._id));
   };
@@ -36,7 +37,7 @@ const MembersScreen = ({ route, navigation }) => {
           <Text className="text-xl font-bold">Select Workplace Members</Text>
           <View className="members mt-3 flex-1">
             <FlatList
-              data={users}
+              data={users.filter((u) => u._id !== user._id)}
               showsVerticalScrollIndicator={false}
               renderItem={({ item, index }) => {
                 return (

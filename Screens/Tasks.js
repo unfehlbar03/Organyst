@@ -91,6 +91,9 @@ export default function Tasks({ router, navigation }) {
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
       dispatch(setActiveWorkplace(workplaces.data[0]._id));
+      setFiltered(
+        tasks.filter((task) => task.workplace_id === workplaces.data[0]._id)
+      );
     }
     getUserInfo();
     getTasks();
@@ -101,7 +104,6 @@ export default function Tasks({ router, navigation }) {
   const handleFiltered = (id) => {
     dispatch(setActiveWorkplace(id));
     const filter_tasks = tasks.filter((task) => task.workplace_id === id);
-
     setFiltered(filter_tasks);
   };
 
