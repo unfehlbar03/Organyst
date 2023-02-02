@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.unfehlbar03.gstapp"
     },
     "android": {
       "adaptiveIcon": {

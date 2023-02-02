@@ -133,7 +133,7 @@ export default function AddNewTask({ navigation }) {
       startDate: range.startDate,
       endDate: range.endDate,
       beneficiary,
-      workplace_id: workplace_id,
+      workplace_id: workflow,
     })
       .then(async (res) => {
         const { data } = res;
@@ -265,7 +265,7 @@ export default function AddNewTask({ navigation }) {
                           >
                             <Text
                               className={`${
-                                workplace_id === item._id
+                                workflow === item._id
                                   ? "text-purple-600"
                                   : "text-black"
                               } font-bold`}
