@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  TextInput,
 } from "react-native";
+import * as Linking from "expo-linking";
 import Icon from "react-native-vector-icons/Feather";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import * as DocumentPicker from "expo-document-picker";
@@ -17,16 +19,22 @@ import * as ImagePicker from "expo-image-picker";
 import completeTask from "../utils/submitTask";
 import getToken from "../utils/getToken";
 import submitTaskByDocument from "../utils/submitTaskbyDocument";
+import { useSelector } from "react-redux";
+import { selectUser } from "../features/authSlice";
+import closeTask from "../utils/closeTask";
+import createReview from "../utils/addReview";
 
 export default function TaskDetails({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { task } = route.params;
   const [file, setFile] = useState(false);
   const [mediaType, setMediaType] = useState("Image");
-  const [done, setDone] = useState(task?.completed);
+  const [done, setDone] = useState(task?.files.length > 0);
   const [step, setStep] = useState(0);
+  const [reviewModal, setReviewModal] = useState(false);
+  const user = useSelector(selectUser);
+  const [review, setReview] = useState("");
 
-  console.log(task);
   let openImagePickerAsync = async () => {
     try {
       let permissionResult =
@@ -144,210 +152,54 @@ export default function TaskDetails({ route, navigation }) {
     setModalOpen(false);
   };
 
+  // handle download file
+
+  const handleFileDownload = () => {
+    if (!task.files.length) {
+      return Alert.alert("No attachments added yet..");
+    }
+    Linking.openURL(task.files[0].filepath);
+  };
+
+  // handle close the Task
+
+  const handleCloseTask = async () => {
+    if (task.leader !== user._id) {
+      return Alert.alert("This action only can be done by leader");
+    }
+    const token = await getToken();
+    try {
+      const feedback = await closeTask(task._id, token);
+      console.log(feedback);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // handle review add
+
+  const handleReview = async () => {
+    const token = await getToken();
+    if (review.length < 12) {
+      return Alert.alert("Make sure review will be 12 characters long");
+    }
+    try {
+      const feedback = await createReview(token, review, task._id);
+      console.log("Feedbacl", feedback);
+      if (feedback.status === "success") {
+        Alert.alert("Review added");
+        setReviewModal(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  console.log("TASK", task);
   return (
     <SafeAreaView style={styles.header}>
       <ScrollView>
         <View className="h-screen">
-          {/* <View
-            style={{ flexDirection: "row", paddingLeft: 80, paddingTop: 80 }}
-          >
-            <Text style={styles.txt2}>Task 1</Text>
-          </View>
-          <View
-            style={{ alignSelf: "flex-end", marginTop: -18, marginRight: 10 }}
-          >
-            <Image
-              style={{ height: 27, width: 27 }}
-              source={require("../assets/clock.png")}
-            />
-          </View>
-
-          <View style={{ paddingTop: 60 }}>
-            <View style={styles.line}></View>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ paddingLeft: 40, paddingTop: 30 }}>
-              <Image
-                style={{ height: 11, width: 11 }}
-                source={require("../assets/Oval.png")}
-              />
-              <Text
-                style={{
-                  paddingLeft: 60,
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  color: "white",
-                  marginTop: -10,
-                }}
-              >
-                Who May Use the Services?{" "}
-              </Text>
-
-              <View style={{ marginTop: -25, marginLeft: -6 }}>
-                <Image
-                  style={{ height: 27, width: 27 }}
-                  source={require("../assets/person.png")}
-                />
-              </View>
-              <View style={{ width: 300 }}>
-                <Text style={styles.txt1}>
-                  When one door of happiness closes, another opens, but often we
-                  look so long at the closed door that we do not see the one
-                  that has been opened for us.
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingLeft: 50,
-                  width: 320,
-                  paddingTop: 50,
-                  flexDirection: "column",
-                }}
-              >
-                <Text style={styles.txt3}>
-                  <Text
-                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-                  >
-                    • Step 1:
-                  </Text>{" "}
-                  You may use the Services only if you agree to form a binding
-                  contract with us and are not a person barred from receiving
-                  services under the laws of the applicable jurisdiction.
-                </Text>
-                <Text style={styles.txt4}>
-                  <Text
-                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-                  >
-                    • Step 2:
-                  </Text>{" "}
-                  Our Privacy Policy describes how we handle the information you
-                  provide to us when you use our Services.
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", paddingTop: 80 }}>
-                <Image
-                  style={{ height: 32, width: 25 }}
-                  source={require("../assets/shield.png")}
-                />
-                <Text style={styles.txt5}>Privacy </Text>
-              </View>
-              <View style={{ width: 300 }}>
-                <Text style={styles.txt7}>
-                  When one door of happiness closes, another opens, but often we
-                  look so long at the closed door that we do not see the one
-                  that has been opened for us.
-                </Text>
-              </View>
-              <View style={{ paddingTop: 20 }}>
-                <TouchableOpacity
-                  style={styles.con}
-                  onPress={() => setModalOpen(true)}
-                >
-                  <View>
-                    <View>
-                      <Modal
-                        transparent={true}
-                        visible={modalOpen}
-                        animationType="fade"
-                      >
-                        <BlurView blurType="light" style={styles.contentWrap}>
-                          <View style={styles.modalView}>
-                            <TouchableOpacity>
-                              <Text
-                                style={styles.txt10}
-                                onPress={() => setModalOpen(false)}
-                              >
-                                x
-                              </Text>
-                            </TouchableOpacity>
-                            <Text style={styles.txt8}>Choose File Format </Text>
-                            <View
-                              style={{
-                                flexDirection: "column",
-                                paddingLeft: 35,
-                                paddingTop: 40,
-                              }}
-                            >
-                              <TouchableOpacity onPress={_pickDocument}>
-                                <View style={styles.btn}>
-                                  <Text style={styles.txt9}>PDF</Text>
-                                </View>
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                                style={{ paddingTop: 20 }}
-                                onPress={() => setModal2Open(true)}
-                              >
-                                <View style={styles.btn1}>
-                                  <View>
-                                    <View>
-                                      <Modal
-                                        transparent={true}
-                                        visible={modal2Open}
-                                        animationType="fade"
-                                      >
-                                        <BlurView
-                                          blurType="light"
-                                          style={styles.contentWrap}
-                                        >
-                                          <View style={styles.modalView}>
-                                            <TouchableOpacity>
-                                              <Text
-                                                style={styles.txt10}
-                                                onPress={() =>
-                                                  setModal2Open(false)
-                                                }
-                                              >
-                                                x
-                                              </Text>
-                                            </TouchableOpacity>
-                                            <Text style={styles.txt8}>
-                                              What you want to do?{" "}
-                                            </Text>
-                                            <View
-                                              style={{
-                                                flexDirection: "column",
-                                                paddingLeft: 35,
-                                                paddingTop: 40,
-                                              }}
-                                            >
-                                              <TouchableOpacity>
-                                                <View style={styles.btn}>
-                                                  <Text style={styles.txt9}>
-                                                    Take Photo
-                                                  </Text>
-                                                </View>
-                                              </TouchableOpacity>
-                                              <TouchableOpacity
-                                                style={{ paddingTop: 20 }}
-                                                onPress={openImagePickerAsync}
-                                              >
-                                                <View style={styles.btn1}>
-                                                  <Text style={styles.txt9}>
-                                                    Choose Image
-                                                  </Text>
-                                                </View>
-                                              </TouchableOpacity>
-                                            </View>
-                                          </View>
-                                        </BlurView>
-                                      </Modal>
-                                    </View>
-                                    <Text style={styles.txt9}>IMAGE</Text>
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </BlurView>
-                      </Modal>
-                    </View>
-                    <Text style={styles.txt6}>Upload File</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View> */}
-
           <View className="py-8 px-6 relative border-b border-gray-200">
             <TouchableOpacity
               onPress={() => {
@@ -374,18 +226,77 @@ export default function TaskDetails({ route, navigation }) {
             <Text className="text-white/50 my-5">{task?.description}</Text>
           </View>
 
-          <View className="w-full absolute bottom-16 flex items-center justify-center">
-            <TouchableOpacity
-              onPress={() => {
-                setModalOpen(true);
-              }}
+          <View className="w-full absolute bottom-16 flex items-center justify-center px-6">
+            {done && (
+              <TouchableOpacity
+                onPress={() => {
+                  // if (task.leader !== user._id) {
+                  //   Alert.alert("You not have permission to do this action");
+                  //   return;
+                  // }
+                  setReviewModal(true);
+                }}
+                className="w-full mb-3"
+              >
+                <View className=" bg-purple-900  w-full mx-auto h-[42px] items-center justify-center rounded-md">
+                  <Text className="font-bold text-white">Review</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+
+            <View
+              className={`w-full flex-row items-center ${
+                done ? "justify-between" : "justify-center"
+              }`}
             >
-              <View className=" bg-blue-700 w-[210px] mx-auto h-[42px] items-center justify-center rounded-md">
-                <Text className="font-bold text-white">
-                  {!done ? "Upload File" : "Change File"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+              {user._id === task.leader && (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("TaskAttachments", { task: task });
+                  }}
+                >
+                  <View className=" bg-purple-900   px-3 mx-auto h-[42px] items-center justify-center rounded-md">
+                    <Text className="font-bold text-white">
+                      View attachments
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              {user._id !== task.leader && (
+                <TouchableOpacity
+                  onPress={
+                    // done
+                    //   ? handleFileDownload
+                    //   : () => {
+                    //       setModalOpen(true);
+                    //       setStep(0);
+                    //     }
+                    () => {
+                      navigation.navigate("TaskAttachments");
+                    }
+                  }
+                >
+                  <View className=" bg-purple-900   px-3 mx-auto h-[42px] items-center justify-center rounded-md">
+                    <Text className="font-bold text-white">
+                      {!done ? "Upload File" : "View attachment"}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              {done && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleCloseTask();
+                  }}
+                >
+                  <View className=" bg-purple-900 w-auto mx-auto h-[42px] items-center justify-center rounded-md px-3">
+                    <Text className="font-bold text-white">
+                      Close this Task
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
 
           {/*Modal Comes Here */}
@@ -507,6 +418,52 @@ export default function TaskDetails({ route, navigation }) {
                       </TouchableOpacity>
                     </View>
                   )}
+                </View>
+              </View>
+            </BlurView>
+          </Modal>
+
+          {/*Modal for Review */}
+
+          <Modal transparent={true} visible={reviewModal} animationType="fade">
+            <BlurView blurType="light" style={styles.contentWrap}>
+              <View className="w-[90%] px-6 py-8 bg-[#241332] rounded-md">
+                <View>
+                  <Text className={`text-white text-2xl font-bold`}>
+                    Write your review
+                  </Text>
+
+                  <View className="w-full mt-3 items-center">
+                    <TextInput
+                      multiline
+                      className="w-full h-[125px] bg-white mb-3 rounded-md px-2 py-2"
+                      placeholder="Type something...."
+                      defaultValue={review}
+                      onChangeText={(text) => setReview(text)}
+                    />
+                    <TouchableOpacity
+                      className="w-full mb-3"
+                      onPress={handleReview}
+                    >
+                      <View className="w-full bg-[#BA56AC] h-[42px] items-center justify-center rounded-full">
+                        <Text className="text-white font-bold uppercase">
+                          Submit
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className="w-full"
+                      onPress={() => {
+                        setReviewModal(false);
+                      }}
+                    >
+                      <View className="w-full bg-[#998FA2] h-[42px] items-center justify-center rounded-full">
+                        <Text className="text-white font-bold uppercase">
+                          Cancel
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </BlurView>

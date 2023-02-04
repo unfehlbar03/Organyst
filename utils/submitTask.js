@@ -7,7 +7,7 @@ const completeTask = async (id, token, file) => {
 
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/complete-task`,
+      `http://192.168.29.170:5001/api/complete-task`,
 
       data,
 

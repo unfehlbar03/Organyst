@@ -1,15 +1,11 @@
 import axios from "axios";
 
-const submitTaskByDocument = async (id, token, file) => {
-  const data = new FormData();
-  data.append("document", file);
-  data.append("taskId", id);
-
+const closeTask = async (id, token) => {
+  console.log("Token,=>", token);
   try {
-    const r = await axios.post(
-      `http://192.168.29.170:5001/api/complete-task`,
-      data,
-
+    const r = await axios.patch(
+      `http://192.168.29.170:5001/api/close-task/${id}`,
+      {},
       {
         headers: {
           "Content-Type": "multipart/form-data;",
@@ -19,7 +15,6 @@ const submitTaskByDocument = async (id, token, file) => {
       }
     );
 
-    console.log(r.data);
     return r.data;
   } catch (e) {
     console.log("Error", e);
@@ -30,4 +25,4 @@ const submitTaskByDocument = async (id, token, file) => {
   }
 };
 
-export default submitTaskByDocument;
+export default closeTask;

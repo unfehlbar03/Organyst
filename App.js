@@ -34,6 +34,7 @@ import { registerTranslation } from "react-native-paper-dates";
 import ForgotPassword from "./Screens/ForgotPassword";
 import AddNewWorkPlace from "./Screens/AddNewWorkplace";
 import MembersScreen from "./Screens/MembersScreen";
+import TaskAttachments from "./Screens/TaskAttachments";
 
 const Stack = createStackNavigator();
 
@@ -123,6 +124,14 @@ export default function App() {
             }}
           />
           <Stack.Screen name="workplaces" component={Workspaces} />
+
+          <Stack.Screen
+            component={TaskAttachments}
+            name="TaskAttachments"
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen name="modifyTask" component={ModifyTask} />
           <Stack.Screen name="taskDetails1" component={TaskDetails1} />
           <Stack.Screen name="deleteTask" component={DeleteTask} />
