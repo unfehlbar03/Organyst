@@ -4,7 +4,7 @@ const createReview = async (token, review, id) => {
   console.log(token, review, id);
   try {
     const r = await axios.post(
-      `http://192.168.29.170:5001/api/task/review`,
+      `http://20.219.16.124:5001/api/task/review`,
       {
         review,
         id,

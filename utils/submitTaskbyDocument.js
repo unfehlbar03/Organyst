@@ -4,15 +4,18 @@ const submitTaskByDocument = async (id, token, file) => {
   const data = new FormData();
   data.append("document", file);
   data.append("taskId", id);
+  console.log("------------------------------------------------------------------------");
+  console.log(data);
+  console.log("------------------------------------------------------------------------");
 
   try {
     const r = await axios.post(
-      `http://192.168.29.170:5001/api/complete-task`,
+      `http://20.219.16.124:5001/api/complete-task`,
       data,
 
       {
         headers: {
-          "Content-Type": "multipart/form-data;",
+          "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token,
           Accept: "application/json",
         },

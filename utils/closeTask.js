@@ -4,17 +4,18 @@ const closeTask = async (id, token) => {
   console.log("Token,=>", token);
   try {
     const r = await axios.patch(
-      `http://192.168.29.170:5001/api/close-task/${id}`,
+      `http://20.219.16.124:5001/api/close-task/${id}`,
       {},
       {
         headers: {
-          "Content-Type": "multipart/form-data;",
           Authorization: "Bearer " + token,
           Accept: "application/json",
         },
       }
     );
-
+    console.log("----------------------------------------------------------------");
+    console.log(r.data);
+    console.log("----------------------------------------------------------------");
     return r.data;
   } catch (e) {
     console.log("Error", e);

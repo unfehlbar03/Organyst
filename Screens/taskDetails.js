@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  Modal,
-  Alert,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Modal, Alert, TextInput } from "react-native";
 import * as Linking from "expo-linking";
 import Icon from "react-native-vector-icons/Feather";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
@@ -37,8 +27,7 @@ export default function TaskDetails({ route, navigation }) {
 
   let openImagePickerAsync = async () => {
     try {
-      let permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (permissionResult.granted === false) {
         alert("Permission to access camera roll is required!");
@@ -106,9 +95,7 @@ export default function TaskDetails({ route, navigation }) {
     const token = await getToken();
     const getRandomName = new Date().getTime() + ".jpeg";
 
-    let nameParts = file.fileName
-      ? file.fileName.split(".")
-      : getRandomName.split(".");
+    let nameParts = file.fileName ? file.fileName.split(".") : getRandomName.split(".");
     let fileType = nameParts[nameParts.length - 1];
 
     var fileToUpload = {
@@ -170,6 +157,10 @@ export default function TaskDetails({ route, navigation }) {
     const token = await getToken();
     try {
       const feedback = await closeTask(task._id, token);
+      if (feedback.status !== "success") {
+        return Alert.alert("Task not closed, contact admins");
+      }
+      Alert.alert("Task marked as completed");
       console.log(feedback);
     } catch (e) {
       console.log(e);
@@ -244,11 +235,7 @@ export default function TaskDetails({ route, navigation }) {
               </TouchableOpacity>
             )}
 
-            <View
-              className={`w-full flex-row items-center ${
-                done ? "justify-between" : "justify-center"
-              }`}
-            >
+            <View className={`w-full flex-row items-center ${done ? "justify-between" : "justify-center"}`}>
               {user._id === task.leader && (
                 <TouchableOpacity
                   onPress={() => {
@@ -256,45 +243,49 @@ export default function TaskDetails({ route, navigation }) {
                   }}
                 >
                   <View className=" bg-purple-900   px-3 mx-auto h-[42px] items-center justify-center rounded-md">
-                    <Text className="font-bold text-white">
-                      View attachments
-                    </Text>
+                    <Text className="font-bold text-white">View attachments</Text>
                   </View>
                 </TouchableOpacity>
               )}
               {user._id !== task.leader && (
                 <TouchableOpacity
                   onPress={
-                    // done
-                    //   ? handleFileDownload
-                    //   : () => {
-                    //       setModalOpen(true);
-                    //       setStep(0);
-                    //     }
-                    () => {
-                      navigation.navigate("TaskAttachments");
-                    }
+                    done
+                      ? handleFileDownload
+                      : () => {
+                          setModalOpen(true);
+                          setStep(0);
+                        }
+                    // () => {
+                    //   navigation.navigate("");
+                    // }
                   }
                 >
-                  <View className=" bg-purple-900   px-3 mx-auto h-[42px] items-center justify-center rounded-md">
-                    <Text className="font-bold text-white">
-                      {!done ? "Upload File" : "View attachment"}
-                    </Text>
+                  <View className=" bg-purple-900 w-full  px-3 mx-auto h-[42px] items-center justify-center rounded-md">
+                    <Text className="font-bold text-white">{!done ? "Upload File" : "View attachment"}</Text>
                   </View>
                 </TouchableOpacity>
               )}
-              {done && (
-                <TouchableOpacity
-                  onPress={() => {
-                    handleCloseTask();
-                  }}
-                >
-                  <View className=" bg-purple-900 w-auto mx-auto h-[42px] items-center justify-center rounded-md px-3">
-                    <Text className="font-bold text-white">
-                      Close this Task
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+              {!task.completed ||
+                (done && (
+                  <TouchableOpacity
+                    onPress={
+                      task.completed
+                        ? null
+                        : () => {
+                            handleCloseTask();
+                          }
+                    }
+                  >
+                    <View className=" bg-purple-900 w-auto mx-auto h-[42px] items-center justify-center rounded-md px-3">
+                      <Text className="font-bold text-white">Close this Task</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              {task.completed && (
+                <View className="bg-gray-400 w-auto mx-auto h-[42px] items-center justify-center rounded-md px-3">
+                  <Text className="font-bold text-white">Task Closed</Text>
+                </View>
               )}
             </View>
           </View>
@@ -304,19 +295,14 @@ export default function TaskDetails({ route, navigation }) {
             <BlurView blurType="light" style={styles.contentWrap}>
               <View className="w-[90%] px-6 py-8 bg-[#241332] rounded-md">
                 <View>
-                  <Text
-                    className={`text-white ${
-                      step === 2 ? "text-left" : "text-center"
-                    } text-2xl font-bold`}
-                  >
+                  <Text className={`text-white ${step === 2 ? "text-left" : "text-center"} text-2xl font-bold`}>
                     {step === 0 && "Choose file format"}
                     {step === 1 && "What you want to do?"}
                     {step === 2 && "Confirm?"}
                   </Text>
                   {step === 2 && (
                     <Text className="text-white/50 my-3">
-                      Tap on tick if you want to confirm the upload otherwise
-                      tap on the cancel button to cancel it.
+                      Tap on tick if you want to confirm the upload otherwise tap on the cancel button to cancel it.
                     </Text>
                   )}
 
@@ -334,13 +320,7 @@ export default function TaskDetails({ route, navigation }) {
                             <MaterialIcon name="clear" color={"#ffffff"} />
                           </View>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={
-                            mediaType === "Document"
-                              ? handleTaskUploadByDocument
-                              : taskSubmit
-                          }
-                        >
+                        <TouchableOpacity onPress={mediaType === "Document" ? handleTaskUploadByDocument : taskSubmit}>
                           <View className="w-10 h-10 bg-blue-500 flex items-center justify-center rounded-full">
                             <MaterialIcon name="done" color={"#ffffff"} />
                           </View>
@@ -350,10 +330,7 @@ export default function TaskDetails({ route, navigation }) {
                   )}
                   {step === 0 && (
                     <View className="w-full mt-3 items-center">
-                      <TouchableOpacity
-                        className="w-full mb-3"
-                        onPress={_pickDocument}
-                      >
+                      <TouchableOpacity className="w-full mb-3" onPress={_pickDocument}>
                         <View className="w-full bg-blue-700 h-[42px] items-center justify-center rounded-full">
                           <Text className="text-white font-bold">PDF</Text>
                         </View>
@@ -383,24 +360,14 @@ export default function TaskDetails({ route, navigation }) {
 
                   {step === 1 && (
                     <View className="w-full mt-3 items-center">
-                      <TouchableOpacity
-                        className="w-full mb-3"
-                        onPress={openCamera}
-                      >
+                      <TouchableOpacity className="w-full mb-3" onPress={openCamera}>
                         <View className="w-full bg-blue-700 h-[42px] items-center justify-center rounded-full">
-                          <Text className="text-white font-bold">
-                            Take Photo
-                          </Text>
+                          <Text className="text-white font-bold">Take Photo</Text>
                         </View>
                       </TouchableOpacity>
-                      <TouchableOpacity
-                        className="w-full mb-3"
-                        onPress={openImagePickerAsync}
-                      >
+                      <TouchableOpacity className="w-full mb-3" onPress={openImagePickerAsync}>
                         <View className="w-full bg-pink-400 h-[42px] items-center justify-center rounded-full">
-                          <Text className="text-white font-bold">
-                            Choose Image
-                          </Text>
+                          <Text className="text-white font-bold">Choose Image</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -429,9 +396,7 @@ export default function TaskDetails({ route, navigation }) {
             <BlurView blurType="light" style={styles.contentWrap}>
               <View className="w-[90%] px-6 py-8 bg-[#241332] rounded-md">
                 <View>
-                  <Text className={`text-white text-2xl font-bold`}>
-                    Write your review
-                  </Text>
+                  <Text className={`text-white text-2xl font-bold`}>Write your review</Text>
 
                   <View className="w-full mt-3 items-center">
                     <TextInput
@@ -441,14 +406,9 @@ export default function TaskDetails({ route, navigation }) {
                       defaultValue={review}
                       onChangeText={(text) => setReview(text)}
                     />
-                    <TouchableOpacity
-                      className="w-full mb-3"
-                      onPress={handleReview}
-                    >
+                    <TouchableOpacity className="w-full mb-3" onPress={handleReview}>
                       <View className="w-full bg-[#BA56AC] h-[42px] items-center justify-center rounded-full">
-                        <Text className="text-white font-bold uppercase">
-                          Submit
-                        </Text>
+                        <Text className="text-white font-bold uppercase">Submit</Text>
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -458,9 +418,7 @@ export default function TaskDetails({ route, navigation }) {
                       }}
                     >
                       <View className="w-full bg-[#998FA2] h-[42px] items-center justify-center rounded-full">
-                        <Text className="text-white font-bold uppercase">
-                          Cancel
-                        </Text>
+                        <Text className="text-white font-bold uppercase">Cancel</Text>
                       </View>
                     </TouchableOpacity>
                   </View>
