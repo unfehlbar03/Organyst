@@ -11,7 +11,7 @@ import {
   Button,
   FlatList,
 } from "react-native";
-import * as Device from "expo-device";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import RNPickerSelect from "react-native-picker-select";
@@ -37,14 +37,6 @@ import Avatar from "../components/Avatar";
 import fetchWorkplace from "../utils/fetchWorkplaces";
 import * as Notifications from "expo-notifications";
 import sendPushNotification from "../utils/notifyUser";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
@@ -106,36 +98,12 @@ export default function Tasks({ router, navigation }) {
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
       dispatch(setActiveWorkplace(workplaces.data[0]._id));
-      setFiltered(
-        tasks.filter((task) => task.workplace_id === workplaces.data[0]._id)
-      );
     }
     getUserInfo();
     getTasks();
     getUsers();
     getWorkplaces();
   }, [isFocused]);
-
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setDeviceToken(token));
-
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
-
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
 
   const handleFiltered = (id) => {
     dispatch(setActiveWorkplace(id));
@@ -365,39 +333,6 @@ export default function Tasks({ router, navigation }) {
       <TaskModal open={open} setOpen={setOpen} />
     </SafeAreaView>
   );
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert("Must use physical device for Push Notifications");
-  }
-
-  return token;
 }
 
 const styles = StyleSheet.create({

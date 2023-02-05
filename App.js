@@ -35,9 +35,10 @@ import ForgotPassword from "./Screens/ForgotPassword";
 import AddNewWorkPlace from "./Screens/AddNewWorkplace";
 import MembersScreen from "./Screens/MembersScreen";
 import TaskAttachments from "./Screens/TaskAttachments";
-
+import { useEffect } from "react";
 const Stack = createStackNavigator();
-
+import * as Notifications from "expo-notifications";
+import useNotifications from "./hooks/useNotifications";
 registerTranslation("en", {
   save: "Save",
   selectSingle: "Select date",
@@ -93,6 +94,34 @@ if (isHermesEnabled || isAndroid) {
 }
 
 export default function App() {
+  const {
+    registerForPushNotificationsAsync,
+    handleNotification,
+    handleNotificationResponse,
+  } = useNotifications();
+  useEffect(() => {
+    async function getToken() {
+      console.log(await registerForPushNotificationsAsync());
+    }
+    getToken();
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
+
+    const responseListener = Notifications.addNotificationReceivedListener(
+      handleNotificationResponse
+    );
+
+    return () => {
+      if (responseListener) {
+        Notifications.removeNotificationSubscription(responseListener);
+      }
+    };
+  }, []);
   return (
     <NavigationContainer>
       <Provider store={store}>
