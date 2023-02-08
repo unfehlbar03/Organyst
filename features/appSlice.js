@@ -11,6 +11,7 @@ const intialState = {
   workplace_members: [],
   workplaces: [],
   activeWorkplace: null,
+  workplaceDeviceTokens: [],
 };
 
 export const appSlice = createSlice({
@@ -20,11 +21,18 @@ export const appSlice = createSlice({
     setLeader: (state, action) => {
       state.leader = action.payload;
     },
+
     setActiveWorkplace: (state, action) => {
       state.activeWorkplace = action.payload;
     },
     setWorkplaceMembers: (state, action) => {
       state.workplace_members = [...state.workplace_members, action.payload];
+    },
+    setWorkplaceDeviceTokens: (state, action) => {
+      state.workplaceDeviceTokens = [
+        ...state.workplaceDeviceTokens,
+        action.payload,
+      ];
     },
 
     setWorkplaces: (state, action) => {
@@ -45,6 +53,21 @@ export const appSlice = createSlice({
         );
       }
       state.workplace_members = newMembers;
+    },
+    removeWorkplaceTokens: (state, action) => {
+      const index = state.workplaceDeviceTokens.findIndex(
+        (fl) => fl === action.payload
+      );
+      let newTokens = [...state.workplaceDeviceTokens];
+
+      if (index >= 0) {
+        newTokens.splice(index, 1);
+      } else {
+        console.warn(
+          `Cant remove member (id: ${action.id}) as its not in store!`
+        );
+      }
+      state.workplaceDeviceTokens = newTokens;
     },
     setAction: (state, action) => {
       state.Action = action.payload;
@@ -86,6 +109,9 @@ export const appSlice = createSlice({
     resetWorkplaceMembers: (state, action) => {
       state.workplace_members = [];
     },
+    resetWorkplaceTokens: (state, action) => {
+      state.workplaceDeviceTokens = [];
+    },
   },
 });
 
@@ -104,10 +130,14 @@ export const {
   resetWorkplaceMembers,
   setWorkplaces,
   setActiveWorkplace,
+  setWorkplaceDeviceTokens,
+  removeWorkplaceTokens,
+  resetWorkplaceTokens,
 } = appSlice.actions;
 
 export const selectLeader = (state) => state.app.leader;
 export const selectAction = (state) => state.app.Action;
+export const selectWorkplaceTokens = (state) => state.app.workplaceDeviceTokens;
 export const selectTaskFollowers = (state) => state.app.taskFollowers;
 export const selectUsers = (state) => state.app.users;
 export const selectTasks = (state) => state.app.tasks;

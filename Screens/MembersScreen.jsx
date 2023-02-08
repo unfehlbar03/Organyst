@@ -6,8 +6,10 @@ import { TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeWorkplaceMembers,
+  removeWorkplaceTokens,
   selectUsers,
   selectWorkplaceMembers,
+  setWorkplaceDeviceTokens,
   setWorkplaceMembers,
 } from "../features/appSlice";
 import { selectUser } from "../features/authSlice";
@@ -17,12 +19,14 @@ const MembersScreen = ({ route, navigation }) => {
   const members = useSelector(selectWorkplaceMembers);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const handleAddMembers = (item) => {
+  const handleAddMembers = (item, token) => {
     dispatch(setWorkplaceMembers(item._id));
+    dispatch(setWorkplaceDeviceTokens(token));
   };
 
-  const handleRemoveMembers = (id) => {
+  const handleRemoveMembers = (id, token) => {
     dispatch(removeWorkplaceMembers(id));
+    dispatch(removeWorkplaceTokens(token));
   };
   const isMemberPresent = (id) => {
     const index = members.findIndex((i) => i == id);
@@ -40,12 +44,13 @@ const MembersScreen = ({ route, navigation }) => {
               data={users.filter((u) => u._id !== user._id)}
               showsVerticalScrollIndicator={false}
               renderItem={({ item, index }) => {
+                console.log("Member", item);
                 return (
                   <TouchableOpacity
                     onPress={() => {
                       !isMemberPresent(item._id)
-                        ? handleAddMembers(item)
-                        : handleRemoveMembers(item._id);
+                        ? handleAddMembers(item, item.deviceId)
+                        : handleRemoveMembers(item._id, item.deviceId);
                     }}
                   >
                     <View

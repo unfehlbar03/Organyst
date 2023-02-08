@@ -70,7 +70,7 @@ export default function TaskView({ route, navigation }) {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate("taskDetails", { task: task })}
+          onPress={() => navigation.navigate("taskDetails", { id: task._id })}
         >
           <Text style={{ fontSize: 15, color: "#5F4591", fontWeight: "700" }}>
             View Task Details ->{" "}

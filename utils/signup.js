@@ -9,7 +9,8 @@ async function signup(
   mobile,
   email,
   aadhar,
-  dob
+  dob,
+  deviceToken
 ) {
   try {
     const r = await axios.post(
@@ -24,6 +25,7 @@ async function signup(
         email: email,
         aadhar: aadhar,
         dateofbirth: dob,
+        deviceId: deviceToken,
       }
     );
 

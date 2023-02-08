@@ -40,10 +40,10 @@ function useNotifications() {
 
   const handleNotificationResponse = (response) => {
     console.log(response);
-    // const data = response.notification.request.content.data;
-    // if (data?.url) {
-    //   Linking.openURL(data.url);
-    // }
+    const data = response.request.content.data;
+    if (data?.url) {
+      console.log(data.url);
+    }
   };
 
   return {

@@ -88,6 +88,7 @@ export default function Tasks({ router, navigation }) {
     async function getTasks() {
       const token = await getToken();
       const tasks = await fetchTasks(token);
+      console.log("Fetching tasks", tasks);
       if (tasks) {
         dispatch(setTasks(tasks.data));
       }
@@ -97,6 +98,7 @@ export default function Tasks({ router, navigation }) {
       const token = await getToken();
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
+      console.log("WorkPlaces", workplaces);
       dispatch(setActiveWorkplace(workplaces.data[0]._id));
     }
     getUserInfo();
@@ -250,9 +252,11 @@ export default function Tasks({ router, navigation }) {
                           );
                         })}
                       </View>
-                      <Text className="text-white/50">
-                        Join Marie,John & 10 others
-                      </Text>
+                      {task.followers.length > 1 && (
+                        <Text className="text-white/50">
+                          & {task.followers.length - 1} others
+                        </Text>
+                      )}
                     </View>
                   </View>
                   <View style={styles.flag}></View>
@@ -312,9 +316,11 @@ export default function Tasks({ router, navigation }) {
                           );
                         })}
                       </View>
-                      <Text className="text-white/50">
-                        Join Marie,John & 10 others
-                      </Text>
+                      {task.followers.length > 1 && (
+                        <Text className="text-white/50">
+                          & {task.followers.length - 1} others
+                        </Text>
+                      )}
                     </View>
                   </View>
                   <View style={styles.flag}></View>

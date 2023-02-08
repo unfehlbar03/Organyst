@@ -24,6 +24,8 @@ import {
   selectActiveWorkplace,
   selectWorkplaces,
   setActiveWorkplace,
+  selectWorkplaceTokens,
+  resetWorkplaceTokens,
 } from "../features/appSlice";
 import addTask from "../utils/addTask";
 import { selectUser } from "../features/authSlice";
@@ -34,6 +36,7 @@ import { useDispatch, useSelector } from "react-redux";
 import fetchTasks from "../utils/fetch-tasks";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import sendNotifcation from "../utils/notifyUsers";
 
 export default function AddNewTask({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -54,6 +57,7 @@ export default function AddNewTask({ navigation }) {
   const user = useSelector(selectUser);
   const workplace_id = useSelector(selectActiveWorkplace);
   const dispatch = useDispatch();
+  const tokens = useSelector(selectWorkplaceTokens);
 
   //Date Picker states and functions
   const [range, setRange] = React.useState({
@@ -142,6 +146,8 @@ export default function AddNewTask({ navigation }) {
         dispatch(resetFollowers());
         dispatch(setBeneficiary(null));
         await getTasks();
+        await sendNotifcation(tokens, user.fullname, "Task", name);
+        dispatch(resetWorkplaceTokens());
         navigation.navigate("tasks");
       })
       .catch((e) => {

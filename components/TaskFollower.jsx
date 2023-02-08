@@ -3,10 +3,12 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import getProfile from "../utils/getProfile";
 import getToken from "../utils/getToken";
+import getUserAssignedTasks from "../utils/getUserAssignedTasks";
 
 function TaskFollower({ follower }) {
   const navigation = useNavigation();
   const [person, setPerson] = React.useState(null);
+  const [tasks, setTasks] = React.useState(null);
   React.useEffect(() => {
     async function fetchProfile() {
       const token = await getToken();
@@ -14,8 +16,17 @@ function TaskFollower({ follower }) {
 
       setPerson(p.data);
     }
+
+    async function getUserTasks() {
+      const token = await getToken();
+      const r = await getUserAssignedTasks(token, follower);
+      console.log(`User Tasks`, r);
+      setTasks(r.data);
+    }
     if (follower) {
+      console.log(follower);
       fetchProfile();
+      getUserTasks();
     }
   }, [follower]);
 
@@ -38,7 +49,7 @@ function TaskFollower({ follower }) {
         {person && (
           <View>
             <Text className="font-bold">{person.fullname}</Text>
-            <Text>6 Tasks assigned</Text>
+            {tasks && <Text>{tasks.length} Tasks assigned</Text>}
           </View>
         )}
       </View>

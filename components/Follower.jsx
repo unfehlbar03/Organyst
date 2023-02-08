@@ -3,11 +3,14 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeFollower,
+  removeWorkplaceTokens,
   selectTaskFollowers,
   setTaskFollowers,
+  setWorkplaceDeviceTokens,
 } from "../features/appSlice";
 
 const Follower = ({ follower }) => {
+  console.log("FOLLOWER", follower);
   const dispatch = useDispatch();
   const followers = useSelector(selectTaskFollowers);
   const getFormattedIntial = (name) => {
@@ -28,11 +31,8 @@ const Follower = ({ follower }) => {
   };
 
   const handleFollowersAdd = () => {
-    const index = followers.findIndex((fl) => fl === follower.id);
-
-    if (index === -1) {
-      dispatch(setTaskFollowers(follower._id));
-    }
+    dispatch(setTaskFollowers(follower._id));
+    dispatch(setWorkplaceDeviceTokens(follower.deviceId));
   };
 
   const isPersonAdded = (id) => {
@@ -42,6 +42,7 @@ const Follower = ({ follower }) => {
 
   const removePerson = () => {
     dispatch(removeFollower(follower._id));
+    dispatch(removeWorkplaceTokens(follower.deviceId));
   };
   return (
     <TouchableOpacity

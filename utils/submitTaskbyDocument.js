@@ -4,9 +4,6 @@ const submitTaskByDocument = async (id, token, file) => {
   const data = new FormData();
   data.append("document", file);
   data.append("taskId", id);
-  console.log("------------------------------------------------------------------------");
-  console.log(data);
-  console.log("------------------------------------------------------------------------");
 
   try {
     const r = await axios.post(
@@ -22,7 +19,6 @@ const submitTaskByDocument = async (id, token, file) => {
       }
     );
 
-    console.log(r.data);
     return r.data;
   } catch (e) {
     console.log("Error", e);

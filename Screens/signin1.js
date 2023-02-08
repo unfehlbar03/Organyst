@@ -64,7 +64,7 @@ export default function Signin1({ navigation }) {
   };
   return (
     <SafeAreaView>
-      <View style={styles.row}>
+      {/* <View style={styles.row}>
         <TouchableOpacity style={styles.plc}>
           <Text style={styles.txt2}>SIGN IN </Text>
         </TouchableOpacity>
@@ -108,6 +108,58 @@ export default function Signin1({ navigation }) {
         >
           <Text style={styles.txt}>FORGOT PASSWORD </Text>
         </TouchableOpacity>
+      </View> */}
+
+      <View className="px-6 py-32 bg-gray-100 h-screen">
+        <View className="flex-row items-center justify-center gap-6">
+          <TouchableOpacity className="px-2 py-1 bg-[#8A56AC] rounded-full">
+            <View>
+              <Text className="text-white font-bold">Sign in</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+            <View>
+              <Text className="font-bold text-black/50">Sign up</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View className="my-16">
+          <TextInput
+            placeholder="Email"
+            underlineColorAndroid={"#352641"}
+            onChangeText={(e) => setEmail(e)}
+            defaultValue={email}
+            className="w-full h-[48px] bg-white mb-3 px-2 rounded-md"
+          />
+          <TextInput
+            placeholder="Password"
+            underlineColorAndroid={"#352641"}
+            onChangeText={(p) => setPassword(p)}
+            defaultValue={password}
+            secureTextEntry={true}
+            className="w-full h-[48px] bg-white px-2 rounded-md"
+          />
+        </View>
+        <View>
+          <TouchableOpacity onPress={handleLogin}>
+            <View className="bg-[#8A56AC] w-full h-[48px] items-center justify-center rounded-full">
+              <Text className="text-white font-semibold uppercase">
+                Continue
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("forgotpass");
+            }}
+          >
+            <View className="w-full h-[48px] items-center justify-center rounded-full shadow-md">
+              <Text className="text-[#8A56AC] font-semibold">
+                Forgot Password
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

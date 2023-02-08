@@ -17,13 +17,19 @@ import addWorkplace from "../utils/addWorkspace";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetWorkplaceMembers,
+  resetWorkplaceTokens,
   selectWorkplaceMembers,
+  selectWorkplaceTokens,
   setAction,
   setWorkplaceMembers,
 } from "../features/appSlice";
+import sendNotifcation from "../utils/notifyUsers";
+import { selectUser } from "../features/authSlice";
 
 export default function AddNewWorkPlace({ navigation }) {
   const members = useSelector(selectWorkplaceMembers);
+  const tokens = useSelector(selectWorkplaceTokens);
+  const user = useSelector(selectUser);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const dispatch = useDispatch();
@@ -60,12 +66,20 @@ export default function AddNewWorkPlace({ navigation }) {
         dispatch(resetWorkplaceMembers());
         dispatch(setAction(false));
         Alert.alert("Workplace Created");
-        navigation.navigate("tasks");
+
+        // send alerts
+        sendNotifcation(tokens, user.fullname, "Workplace", name).then((r) => {
+          console.log(r);
+          dispatch(resetWorkplaceTokens());
+          navigation.navigate("tasks");
+        });
       })
       .catch((e) => {
         console.log(e);
       });
   };
+
+  console.log(tokens);
 
   return (
     <ScrollView className="pb-[300px]">
