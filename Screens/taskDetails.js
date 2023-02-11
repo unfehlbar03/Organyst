@@ -262,7 +262,7 @@ export default function TaskDetails({ route, navigation }) {
           <Text className="text-white/50 my-5">{task?.description}</Text>
         </View>
 
-        {reviews?.length && (
+        {/* {reviews?.length && (
           <View className="py-6 px-6 w-full">
             <Text className="text-white text-xl mb-6">Reviews</Text>
             <FlatList
@@ -283,7 +283,7 @@ export default function TaskDetails({ route, navigation }) {
               showsHorizontalScrollIndicator={false}
             />
           </View>
-        )}
+        )} */}
 
         <View className="w-full absolute bottom-16 flex items-center justify-center px-6">
           {done && (

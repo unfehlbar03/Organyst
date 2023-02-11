@@ -11,11 +11,15 @@ import {
 } from "react-native";
 import getProfile from "../utils/getProfile";
 import getToken from "../utils/getToken";
+
 import { Linking } from "react-native";
+import getUserCompletedTasks from "../utils/getCompletedTasks";
+import { FlatList } from "react-native";
 
 export default function ProfileViewOne({ route, navigation }) {
   const { id } = route.params;
   const [u, setU] = React.useState(null);
+  const [tasks, setTasks] = React.useState(null);
 
   React.useEffect(() => {
     async function getProfileData() {
@@ -28,107 +32,120 @@ export default function ProfileViewOne({ route, navigation }) {
         console.log(e);
       }
     }
+
+    async function getMyCompletedTasks() {
+      try {
+        const token = await getToken();
+        const tasks = await getUserCompletedTasks(id, token);
+        console.log(tasks);
+        setTasks(tasks.data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
     if (id) {
       getProfileData();
+      getMyCompletedTasks();
     }
   }, [id]);
   return (
     <SafeAreaView>
-      <ScrollView>
-        <View style={styles.coverContainer}>
-          <ImageBackground
-            style={{ height: 300, width: "100%" }}
-            source={require("../assets/Ava.png")}
-          >
-            <View style={{ paddingTop: 25, alignSelf: "flex-end" }}>
-              <TouchableOpacity
-                style={styles.circle1}
-                onPress={() => {
-                  Linking.openURL(`tel:${u.mobile}`);
-                }}
-              >
-                <View style={{ paddingLeft: 8, paddingTop: 8 }}>
+      <View style={styles.coverContainer}>
+        <ImageBackground
+          style={{ height: 300, width: "100%" }}
+          source={require("../assets/Ava.png")}
+        >
+          <View style={{ paddingTop: 25, alignSelf: "flex-end" }}>
+            <TouchableOpacity
+              style={styles.circle1}
+              onPress={() => {
+                Linking.openURL(`tel:${u.mobile}`);
+              }}
+            >
+              <View style={{ paddingLeft: 8, paddingTop: 8 }}>
+                <Image
+                  style={{ height: 20, width: 20 }}
+                  source={require("../assets/call.png")}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textaline}>
+            <Text style={styles.txt4}>{u?.designation} </Text>
+            <Text style={styles.txt5}>{u?.fullname}</Text>
+          </View>
+        </ImageBackground>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingTop: 30,
+          }}
+        >
+          <View>
+            <TouchableOpacity>
+              <View style={styles.circle2}>
+                <View style={{ paddingLeft: 12, paddingTop: 16 }}>
                   <Image
-                    style={{ height: 20, width: 20 }}
-                    source={require("../assets/call.png")}
+                    style={{ height: 16, width: 20 }}
+                    source={require("../assets/tick.png")}
                   />
                 </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.textaline}>
-              <Text style={styles.txt4}>{u?.designation} </Text>
-              <Text style={styles.txt5}>{u?.fullname}</Text>
-            </View>
-          </ImageBackground>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              paddingTop: 30,
-            }}
-          >
-            <View>
-              <TouchableOpacity>
-                <View style={styles.circle2}>
-                  <View style={{ paddingLeft: 12, paddingTop: 16 }}>
-                    <Image
-                      style={{ height: 16, width: 20 }}
-                      source={require("../assets/tick.png")}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.txt8}>Task Completed </Text>
-            </View>
-            <View
-              style={{
-                height: 50,
-                width: 1,
-                borderColor: "#9599b3",
-                borderWidth: 1,
-              }}
-            />
-            <View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("profileView2")}
-              >
-                <View style={styles.circle3}>
-                  <View style={{ paddingLeft: 12, paddingTop: 10 }}>
-                    <Image
-                      style={{ height: 22, width: 20 }}
-                      source={require("../assets/pending.png")}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.txt8}>Task Pending </Text>
-            </View>
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.txt8}>Task Completed </Text>
           </View>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              paddingTop: 60,
-              alignContent: "flex-start",
+              height: 50,
+              width: 1,
+              borderColor: "#9599b3",
+              borderWidth: 1,
             }}
-          >
-            <View style={styles.circle4}></View>
-            <View style={{ alignItems: "baseline" }}>
-              <Text style={styles.txt6}>Task 2</Text>
-            </View>
-
-            <View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("taskDetails1")}
-              >
-                <View style={styles.btn}>
-                  <Text style={styles.txt7}>Review Required </Text>
+          />
+          <View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("profileView2", { id: id })}
+            >
+              <View style={styles.circle3}>
+                <View style={{ paddingLeft: 12, paddingTop: 10 }}>
+                  <Image
+                    style={{ height: 22, width: 20 }}
+                    source={require("../assets/pending.png")}
+                  />
                 </View>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.txt8}>Task Pending </Text>
           </View>
         </View>
-      </ScrollView>
+        <View className="my-8">
+          {tasks && (
+            <FlatList
+              data={tasks}
+              renderItem={({ item, index }) => {
+                return (
+                  <View className="flex-row w-full justify-between py-3 px-6">
+                    <View style={{ alignItems: "baseline" }}>
+                      <Text className="text-sm">{item.taskname}</Text>
+                    </View>
+
+                    <View>
+                      <TouchableOpacity>
+                        <View className="px-2 py-3 bg-purple-900 w-[110px] items-center justify-center rounded-full">
+                          <Text className="text-white font-semibold">
+                            Review
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }}
+            />
+          )}
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
