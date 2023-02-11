@@ -99,7 +99,9 @@ export default function Tasks({ router, navigation }) {
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
       console.log("WorkPlaces", workplaces);
-      dispatch(setActiveWorkplace(workplaces.data[0]._id));
+      if (workplaces.data) {
+        dispatch(setActiveWorkplace(workplaces.data[0]._id));
+      }
     }
     getUserInfo();
     getTasks();

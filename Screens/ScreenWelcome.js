@@ -19,7 +19,7 @@ export default function Header({ navigation }) {
             <View
               className="bg-[#352641] h-[175px] py-8 px-3"
               style={{
-                borderBottomLeftRadius: "65px",
+                borderBottomLeftRadius: 65,
               }}
             >
               <Text className="text-gray-400 text-md uppercase">Tutorial</Text>
