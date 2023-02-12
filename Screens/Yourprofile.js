@@ -1,17 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert } from "react-native";
-=======
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
->>>>>>> be78b8ea88c463dda50be990c761ce5941ff6249
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,8 +60,9 @@ export default function YourProfile({ navigation }) {
           </View>
           {u && (
             <View style={styles.textaline}>
-              <Text style={styles.txt4}>NUMBER OF MEETUPS</Text>
+              <Text style={styles.txt4}>Hi!</Text>
               <Text style={styles.txt5}>{u.fullname}</Text>
+              {/* <Text style={styles.txt4}>You have </Text> */}
             </View>
           )}
 
