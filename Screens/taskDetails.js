@@ -265,6 +265,8 @@ export default function TaskDetails({ route, navigation }) {
     try {
       const feedback = await createReview(token, review, task._id);
       console.log("Feedback", feedback);
+      const newReview = feedback.data.review;
+      setReviews([...reviews, newReview]);
       if (feedback.status === "success") {
         Alert.alert("Review added");
 
@@ -327,12 +329,18 @@ export default function TaskDetails({ route, navigation }) {
               renderItem={({ item, index }) => (
                 <TouchableOpacity
                   className={`w-[275px] h-[115px] ${index && "ml-8"}`}
+                  onPress={() => {
+                    navigation.navigate("Review", { review: item });
+                  }}
                 >
-                  <View className="py-5 px-2 bg-purple-500 w-full h-full rounded-md">
+                  <View
+                    className={`${
+                      item.description.length > 30 ? "px-6" : "px-2"
+                    } py-5  bg-purple-500 w-full h-full rounded-md`}
+                  >
                     <Text className="text-lg text-white">
                       {item.description}
                     </Text>
-                    <Text>{item.reviwed_by}</Text>
                   </View>
                 </TouchableOpacity>
               )}

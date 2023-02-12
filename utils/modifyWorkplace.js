@@ -1,13 +1,15 @@
 import axios from "axios";
 
 async function modifyWorkplace(token, id, data) {
+  console.log("Workplace Data", data);
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/workspace/${id}`,
+      `http://192.168.29.170:5001/api/workspace/${id}`,
 
       {
         name: data.name,
         description: data.description,
+        members: data.members,
       },
       {
         headers: {

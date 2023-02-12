@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Header from "./Screens/ScreenWelcome";
@@ -29,7 +29,7 @@ import Beneficiary from "./Screens/Benificiary";
 import MyTasks from "./Screens/MyTasks";
 import Edit1 from "./Screens/edit1";
 import ChangePass from "./Screens/changepass";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./store";
 import { registerTranslation } from "react-native-paper-dates";
 import ForgotPassword from "./Screens/ForgotPassword";
@@ -40,7 +40,9 @@ import { useEffect } from "react";
 const Stack = createStackNavigator();
 import * as Notifications from "expo-notifications";
 import useNotifications from "./hooks/useNotifications";
-import getMyAlerts from "./utils/getAlerts";
+import TaskModifyLeader from "./Screens/TaskModifyLeader";
+import TaskModifyFollowers from "./Screens/TaskModifyFollowers";
+import ReviewScreen from "./Screens/ReviewScreen";
 registerTranslation("en", {
   save: "Save",
   selectSingle: "Select date",
@@ -103,11 +105,6 @@ export default function App() {
     getNotifications,
   } = useNotifications();
   useEffect(() => {
-    async function getToken() {
-      console.log(await registerForPushNotificationsAsync());
-    }
-
-    getToken();
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
@@ -159,6 +156,7 @@ export default function App() {
           />
           <Stack.Screen name="workplaces" component={Workspaces} />
           <Stack.Screen name="mytasks" component={MyTasks} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
 
           <Stack.Screen
             component={TaskAttachments}
@@ -171,6 +169,15 @@ export default function App() {
           <Stack.Screen name="taskDetails1" component={TaskDetails1} />
           <Stack.Screen name="deleteTask" component={DeleteTask} />
           <Stack.Screen name="profileView" component={ProfileViewOne} />
+          <Stack.Screen
+            name="modifyTaskFollowers"
+            component={TaskModifyFollowers}
+            options={{
+              presentation: "modal",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="modifyTaskLeader" component={TaskModifyLeader} />
           <Stack.Screen name="profileView2" component={ProfileViewTwo} />
           <Stack.Screen name="myleadingtask" component={Myleading} />
           <Stack.Screen name="myfollowingtask" component={Myfollowing} />

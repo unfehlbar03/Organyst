@@ -55,7 +55,6 @@ export default function AddNewTask({ navigation }) {
   const followers = useSelector(selectTaskFollowers);
   const workplaces = useSelector(selectWorkplaces);
   const user = useSelector(selectUser);
-  const workplace_id = useSelector(selectActiveWorkplace);
   const dispatch = useDispatch();
   const tokens = useSelector(selectWorkplaceTokens);
 
@@ -376,9 +375,15 @@ export default function AddNewTask({ navigation }) {
                 />
               </View>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("selectLeaders", { path: "addTask" })
-                }
+                onPress={() => {
+                  if (!workflow) {
+                    Alert.alert("You must choose a workplace first.");
+                  } else {
+                    navigation.navigate("selectLeaders", {
+                      workflow: workflow,
+                    });
+                  }
+                }}
               >
                 <Text style={styles.txt2}>Select People </Text>
                 <Text style={styles.txt4}>

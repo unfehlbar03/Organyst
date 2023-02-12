@@ -13,6 +13,8 @@ const intialState = {
   activeWorkplace: null,
   workplaceDeviceTokens: [],
   userAlerts: [],
+  modifyFollowers: [],
+  modifyLeader: null,
 };
 
 export const appSlice = createSlice({
@@ -21,6 +23,12 @@ export const appSlice = createSlice({
   reducers: {
     setLeader: (state, action) => {
       state.leader = action.payload;
+    },
+    setModifyLeader: (state, action) => {
+      state.modifyLeader = action.payload;
+    },
+    setModifyFollowers: (state, action) => {
+      state.modifyFollowers = action.payload;
     },
     setAlerts: (state, action) => {
       state.userAlerts = action.payload;
@@ -122,6 +130,10 @@ export const appSlice = createSlice({
     resetWorkplaceTokens: (state, action) => {
       state.workplaceDeviceTokens = [];
     },
+    resetModify: (state, action) => {
+      state.modifyFollowers = [];
+      state.modifyLeader = null;
+    },
     resetStore: (state, action) => {
       state.leader = null;
       state.taskLeader = null;
@@ -135,6 +147,8 @@ export const appSlice = createSlice({
       state.activeWorkplace = null;
       state.workplaceDeviceTokens = [];
       state.userAlerts = [];
+      state.modifyFollowers = [];
+      state.modifyLeader = null;
     },
   },
 });
@@ -161,6 +175,9 @@ export const {
   addAlert,
   AddFollowers,
   resetStore,
+  setModifyFollowers,
+  setModifyLeader,
+  resetModify,
 } = appSlice.actions;
 
 export const selectLeader = (state) => state.app.leader;
@@ -174,5 +191,7 @@ export const selectWorkplaceMembers = (state) => state.app.workplace_members;
 export const selectWorkplaces = (state) => state.app.workplaces;
 export const selectActiveWorkplace = (state) => state.app.activeWorkplace;
 export const selectAlerts = (state) => state.app.userAlerts;
+export const selectModifyUsers = (state) => state.app.modifyFollowers;
+export const modifiedLeader = (state) => state.app.modifyLeader;
 
 export default appSlice.reducer;

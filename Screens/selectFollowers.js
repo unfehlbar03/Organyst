@@ -13,7 +13,7 @@ import { selectTaskFollowers, selectUsers } from "../features/appSlice";
 import { selectUser } from "../features/authSlice";
 
 export default function SelectFollowers({ route, navigation }) {
-  const { path, item } = route.params;
+  const { item, workflow } = route.params;
   const users = useSelector(selectUsers);
   const followers = useSelector(selectTaskFollowers);
   const user = useSelector(selectUser);
@@ -33,7 +33,9 @@ export default function SelectFollowers({ route, navigation }) {
       <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
         <TouchableOpacity
           style={styles.txtaline}
-          onPress={() => navigation.navigate("selectLeaders")}
+          onPress={() =>
+            navigation.navigate("selectLeaders", { workflow: workflow })
+          }
         >
           <Text style={styles.txt3}>Appoint Leader </Text>
         </TouchableOpacity>
@@ -58,10 +60,7 @@ export default function SelectFollowers({ route, navigation }) {
         <TouchableOpacity
           className="w-full"
           onPress={() => {
-            navigation.navigate(
-              path === "addTask" ? "AddNewTask" : "modifyTask",
-              { item }
-            );
+            navigation.navigate("AddNewTask", { item });
           }}
         >
           <View

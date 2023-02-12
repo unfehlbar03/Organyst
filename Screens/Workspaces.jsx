@@ -12,10 +12,11 @@ import { selectWorkplaces, setWorkplaces } from "../features/appSlice";
 import getToken from "../utils/getToken";
 import removeWorkplace from "../utils/removeWorkplace";
 import { Alert } from "react-native";
+import { selectUser } from "../features/authSlice";
 
 const Workspaces = ({ navigation }) => {
   const workplaces = useSelector(selectWorkplaces);
-
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const handleRemove = async (id) => {
@@ -47,7 +48,7 @@ const Workspaces = ({ navigation }) => {
         <View className="my-6 h-[650px]">
           {workplaces.length > 0 && (
             <FlatList
-              data={workplaces}
+              data={workplaces.filter((i) => i.createdBy === user._id)}
               renderItem={({ item, index }) => {
                 return (
                   <View className="px-6 py-3 bg-gray-300/30 mt-8 rounded-md relative">
