@@ -40,8 +40,9 @@ export default function Signup({ navigation }) {
   // handle signup
 
   const handleSignup = async () => {
-    if (aadhar == "") {
-      aadhar = null;
+    if (!fullname || !email || !password) {
+      Alert.alert("Enter all mandatory fields");
+      return;
     }
     const response = await signup(
       fullname,
