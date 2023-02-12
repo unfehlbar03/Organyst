@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  Modal,
-  Alert,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TextInput, ScrollView, SafeAreaView, TouchableOpacity, Modal, Alert, FlatList } from "react-native";
 import { BlurView } from "expo-blur";
 import DropDownPicker from "react-native-dropdown-picker";
 import {
@@ -77,7 +65,7 @@ export default function AddNewTask({ navigation }) {
   );
 
   //Time Picker states and functions
-  const [time, setTime] = React.useState({ hours: 12, minutes: 0 });
+  const [time, setTime] = React.useState({ hours: 23, minutes: 59 });
   const [visible, setVisible] = React.useState(false);
   const onDismissTime = React.useCallback(() => {
     setVisible(false);
@@ -90,6 +78,7 @@ export default function AddNewTask({ navigation }) {
     },
     [setVisible]
   );
+
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@jwt_token");
@@ -119,12 +108,14 @@ export default function AddNewTask({ navigation }) {
       return Alert.alert("Make sure followers assigned for this task");
     }
     if (!workflow) {
-      return Alert.alert(
-        "Make sure workflow assigned for this task if you not have any worplace Create New One."
-      );
+      return Alert.alert("Make sure workflow assigned for this task if you not have any worplace Create New One.");
     }
     const token = await getToken();
-    const endTime = time.hours + ":" + time.minutes;
+    let endTime = time.hours + ":" + time.minutes + "AM";
+    if (time.hours > 12) {
+      endTime = time.hours - 12 + ":" + time.minutes + "PM";
+    }
+
     addTask(token, {
       name,
       description,
@@ -157,35 +148,20 @@ export default function AddNewTask({ navigation }) {
 
   const formatDate = (timeStamp) => {
     let date = new Date(timeStamp);
-    let months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
   };
 
   const getFormattedInitial = () => {
     const words = user?.fullname.toUpperCase().split(" ");
-    return words.length > 1
-      ? words[0][0] + words[1][0]
-      : words[0][0] + words[0][1];
+    return words.length > 1 ? words[0][0] + words[1][0] : words[0][0] + words[0][1];
   };
 
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
-          <View style={{ flex: 1, justifyContent: "center", paddingLeft: 12 }}>
+          <View style={{ flex: 1, justifyContent: "center", paddingLeft: 25, paddingTop: 40 }}>
             <View style={{ flexDirection: "row" }}>
               <View
                 style={{
@@ -195,16 +171,12 @@ export default function AddNewTask({ navigation }) {
                 }}
                 className="flex items-center justify-center bg-green-500"
               >
-                <Text className="text-white">
-                  {user && getFormattedInitial()}
-                </Text>
+                <Text className="text-white">{user && getFormattedInitial()}</Text>
               </View>
               <View style={{ paddingLeft: 20, flexDirection: "column" }}>
                 <Text style={{ fontSize: 26 }}>Add New Task </Text>
                 <View style={{ width: 180 }}>
-                  <Text style={{ fontSize: 12, color: "#9599b3" }}>
-                    Find your people and do your thing - together{" "}
-                  </Text>
+                  <Text style={{ fontSize: 12, color: "#9599b3" }}>Find your people and do your thing - together </Text>
                 </View>
               </View>
             </View>
@@ -220,7 +192,6 @@ export default function AddNewTask({ navigation }) {
                     placeholder="Task Name"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
-                    underlineColorAndroid={"#8a56ac"}
                     defaultValue={name}
                     onChangeText={(text) => setName(text)}
                   />
@@ -231,7 +202,6 @@ export default function AddNewTask({ navigation }) {
                     placeholder="Subject"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
-                    underlineColorAndroid={"#8a56ac"}
                     defaultValue={subject}
                     onChangeText={(text) => setSubject(text)}
                   />
@@ -242,17 +212,14 @@ export default function AddNewTask({ navigation }) {
                     placeholder="Description"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
-                    underlineColorAndroid={"#8a56ac"}
                     defaultValue={description}
                     onChangeText={(text) => setDescription(text)}
                   />
                 </View>
 
                 {workplaces.length > 0 && (
-                  <View className="px-4 my-4">
-                    <Text className="text-[#9599b3] font-bold mb-4">
-                      Choose Workflow
-                    </Text>
+                  <View className="px-6 mt-5">
+                    <Text className="text-[#9599b3] font-bold mb-3">Choose Workflow</Text>
                     <FlatList
                       data={workplaces}
                       horizontal
@@ -264,20 +231,10 @@ export default function AddNewTask({ navigation }) {
                         >
                           <View
                             className={`h-10 ${
-                              workflow === item._id
-                                ? "bg-purple-200"
-                                : "bg-gray-300"
+                              workflow === item._id ? "bg-purple-200" : "bg-gray-300"
                             } mr-3 px-2 flex items-center justify-center rounded-full`}
                           >
-                            <Text
-                              className={`${
-                                workflow === item._id
-                                  ? "text-purple-600"
-                                  : "text-black"
-                              } font-bold`}
-                            >
-                              {item.name}
-                            </Text>
+                            <Text className={`${workflow === item._id ? "text-purple-600" : "text-black"} font-bold`}>{item.name}</Text>
                           </View>
                         </TouchableOpacity>
                       )}
@@ -287,37 +244,23 @@ export default function AddNewTask({ navigation }) {
                 )}
               </View>
             </View>
-            <View style={{ flexDirection: "row", paddingTop: 40 }}>
+            <View style={{ flexDirection: "row", paddingTop: 25 }}>
               <View style={{ paddingLeft: 20, marginTop: 4 }}>
                 {/* <AiTwotoneCalendar /> */}
-                <Image
-                  style={{ height: 17, width: 17 }}
-                  source={require("../assets/clock.png")}
-                />
+                <Image style={{ height: 17, width: 17 }} source={require("../assets/clock.png")} />
               </View>
               <Text style={styles.txt2}>Task Date </Text>
               <Text style={styles.txt3}> &gt; </Text>
             </View>
             <View style={{ flexDirection: "row", paddingTop: 10 }}>
               <View style={{ paddingLeft: 20 }}>
-                <TouchableOpacity
-                  style={styles.btn1}
-                  onPress={() => setOpen(true)}
-                  className="flex items-center justify-cente"
-                >
-                  <Text className="text-white">
-                    {range.startDate && formatDate(range.startDate)}
-                  </Text>
+                <TouchableOpacity style={styles.btn1} onPress={() => setOpen(true)} className="flex items-center justify-center px-6">
+                  <Text className="text-white">{range.startDate && formatDate(range.startDate)}</Text>
                 </TouchableOpacity>
               </View>
               <View style={{ paddingLeft: 5 }}>
-                <TouchableOpacity
-                  style={styles.btn2}
-                  onPress={() => setOpen(true)}
-                >
-                  <Text className="text-white">
-                    {range.endDate && formatDate(range.endDate)}
-                  </Text>
+                <TouchableOpacity style={styles.btn2} onPress={() => setOpen(true)} className="flex items-center justify-center px-6">
+                  <Text className="text-white">{range.endDate && formatDate(range.endDate)}</Text>
                 </TouchableOpacity>
               </View>
               <DatePickerModal
@@ -332,67 +275,37 @@ export default function AddNewTask({ navigation }) {
               />
             </View>
 
-            <View style={{ flexDirection: "row", paddingTop: 40 }}>
+            <View style={{ flexDirection: "row", paddingTop: 35 }}>
               <View style={{ paddingLeft: 20, marginTop: 4 }}>
-                <Image
-                  style={{ height: 17, width: 17 }}
-                  source={require("../assets/clock.png")}
-                />
+                <Image style={{ height: 17, width: 17 }} source={require("../assets/clock.png")} />
               </View>
               <TouchableOpacity onPress={() => setVisible(true)}>
                 <Text style={styles.txt2}>Task End Time </Text>
-                <Text style={styles.txt4}>
-                  Optionally Select task's end time{" "}
-                </Text>
+                <Text style={styles.txt4}>Optionally Select task's end time</Text>
               </TouchableOpacity>
-              <Text style={styles.txt5}> > </Text>
-              <TimePickerModal
-                visible={visible}
-                onDismiss={onDismissTime}
-                onConfirm={onConfirmTime}
-                hours={12}
-                minutes={0}
-              />
+              <TimePickerModal visible={visible} onDismiss={onDismissTime} onConfirm={onConfirmTime} hours={12} minutes={0} />
             </View>
 
-            <View style={{ flexDirection: "row", paddingTop: 40 }}>
+            <View style={{ flexDirection: "row", paddingTop: 35 }}>
               <View style={{ paddingLeft: 20, marginTop: 4 }}>
-                <Image
-                  style={{ height: 17, width: 17 }}
-                  source={require("../assets/SelectPeople.png")}
-                />
+                <Image style={{ height: 17, width: 17 }} source={require("../assets/SelectPeople.png")} />
               </View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("selectLeaders")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("selectLeaders")}>
                 <Text style={styles.txt2}>Select People </Text>
-                <Text style={styles.txt4}>
-                  Select specific person for the task
-                </Text>
+                <Text style={styles.txt4}>Select specific person for the task</Text>
               </TouchableOpacity>
-              <Text style={styles.txt5}> > </Text>
             </View>
-            <View style={{ flexDirection: "row", paddingTop: 40 }}>
+            <View style={{ flexDirection: "row", paddingTop: 35 }}>
               <View style={{ paddingLeft: 20, marginTop: 4 }}>
-                <Image
-                  style={{ height: 21, width: 17 }}
-                  source={require("../assets/flag.png")}
-                />
+                <Image style={{ height: 21, width: 17 }} source={require("../assets/flag.png")} />
               </View>
               <TouchableOpacity onPress={() => setModalOpen(true)}>
                 <View>
-                  <Modal
-                    transparent={true}
-                    visible={modalOpen}
-                    animationType="fade"
-                  >
+                  <Modal transparent={true} visible={modalOpen} animationType="fade">
                     <BlurView blurType="light" style={styles.contentWrap}>
                       <View style={styles.modalView}>
                         <TouchableOpacity>
-                          <Text
-                            style={styles.txt10}
-                            onPress={() => setModalOpen(false)}
-                          >
+                          <Text style={styles.txt10} onPress={() => setModalOpen(false)}>
                             x
                           </Text>
                         </TouchableOpacity>
@@ -431,14 +344,11 @@ export default function AddNewTask({ navigation }) {
                   </Modal>
                 </View>
                 <Text style={styles.txt2}>Task Active Flag </Text>
-                <Text style={styles.txt4}>
-                  Select Flag according to the priority{" "}
-                </Text>
+                <Text style={styles.txt4}>Select Flag according to the priority </Text>
               </TouchableOpacity>
-              <Text style={styles.txt5}> > </Text>
             </View>
             <View style={{ alignItems: "center" }}>
-              <View style={{ flexDirection: "row", paddingTop: 80 }}>
+              <View style={{ flexDirection: "row", paddingTop: 40, paddingBottom: 40 }}>
                 <TouchableOpacity style={styles.btn} onPress={handleNewTask}>
                   <Text style={styles.txt1}>ADD TASK </Text>
                 </TouchableOpacity>
@@ -463,12 +373,15 @@ const styles = StyleSheet.create({
   inp1: {
     paddingTop: 40,
     paddingLeft: 20,
+    paddingRight: 20,
   },
   txt: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
     height: 40,
+    borderBottomColor: "#8a56ac",
+    borderBottomWidth: 1,
   },
   btn: {
     width: 327,

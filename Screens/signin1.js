@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Card,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Card, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import login from "../utils/login";
 export default function Signin1({ navigation }) {
@@ -112,7 +101,7 @@ export default function Signin1({ navigation }) {
 
       <View className="px-6 py-32 bg-gray-100 h-screen">
         <View className="flex-row items-center justify-center gap-6">
-          <TouchableOpacity className="px-2 py-1 bg-[#8A56AC] rounded-full">
+          <TouchableOpacity className="px-3 py-1 bg-[#8A56AC] rounded-full">
             <View>
               <Text className="text-white font-bold">Sign in</Text>
             </View>
@@ -126,14 +115,14 @@ export default function Signin1({ navigation }) {
         <View className="my-16">
           <TextInput
             placeholder="Email"
-            underlineColorAndroid={"#352641"}
+            underlineColorAndroid="transparent"
             onChangeText={(e) => setEmail(e)}
             defaultValue={email}
             className="w-full h-[48px] bg-white mb-3 px-2 rounded-md"
           />
           <TextInput
             placeholder="Password"
-            underlineColorAndroid={"#352641"}
+            underlineColorAndroid="transparent"
             onChangeText={(p) => setPassword(p)}
             defaultValue={password}
             secureTextEntry={true}
@@ -143,9 +132,7 @@ export default function Signin1({ navigation }) {
         <View>
           <TouchableOpacity onPress={handleLogin}>
             <View className="bg-[#8A56AC] w-full h-[48px] items-center justify-center rounded-full">
-              <Text className="text-white font-semibold uppercase">
-                Continue
-              </Text>
+              <Text className="text-white font-semibold uppercase">Continue</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -154,9 +141,7 @@ export default function Signin1({ navigation }) {
             }}
           >
             <View className="w-full h-[48px] items-center justify-center rounded-full shadow-md">
-              <Text className="text-[#8A56AC] font-semibold">
-                Forgot Password
-              </Text>
+              <Text className="text-[#8A56AC] font-semibold">Forgot Password</Text>
             </View>
           </TouchableOpacity>
         </View>

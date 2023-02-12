@@ -20,11 +20,15 @@ export default function ForgotPassword({ navigation }) {
     if (!email || !pass) {
       return Alert.alert("Please enter all fields");
     }
+    if(pass.length<=5){
+      return Alert.alert("New password should be of more than 5 characters")
+    }
+
     const response = await forgotPassword(email, pass);
 
     const { status } = response;
     if (status !== "success") {
-      Alert.alert("Error in forgoting password");
+      Alert.alert("Error in Resetting Password, Please Enter Valid Email.");
       return;
     }
 
@@ -64,7 +68,7 @@ export default function ForgotPassword({ navigation }) {
                 <View style={styles.inp1}>
                   <TextInput
                     style={styles.txt}
-                    placeholder="Password"
+                    placeholder="New Password"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
                     underlineColorAndroid={"#8a56ac"}

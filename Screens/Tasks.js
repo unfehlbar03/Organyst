@@ -1,16 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Modal,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Button,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Modal, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Button, FlatList } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -99,7 +88,7 @@ export default function Tasks({ router, navigation }) {
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
       console.log("WorkPlaces", workplaces);
-      if (workplaces.data) {
+      if (workplaces?.data) {
         dispatch(setActiveWorkplace(workplaces.data[0]._id));
       }
     }
@@ -119,7 +108,7 @@ export default function Tasks({ router, navigation }) {
 
   return (
     <SafeAreaView className="relative h-screen">
-      <View className="py-4 pt-16 px-4 flex flex-col items-center justify-center">
+      <View className="py-4 pt-20 px-8 flex flex-col items-center justify-center">
         <View className="flex w-[90%] flex-row  justify-between">
           <TouchableOpacity
             onPress={() => {
@@ -133,24 +122,14 @@ export default function Tasks({ router, navigation }) {
               navigation.navigate("tasks");
             }}
           >
-            <UserNavOption
-              type="icon"
-              name="list"
-              caption={"Tasks"}
-              user={false}
-            />
+            <UserNavOption type="icon" name="list" caption={"Tasks"} user={false} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("alert");
             }}
           >
-            <UserNavOption
-              type="icon"
-              name="alert"
-              caption={"Alerts"}
-              user={false}
-            />
+            <UserNavOption type="icon" name="alert" caption={"Alerts"} user={false} />
           </TouchableOpacity>
         </View>
         <View className="w-full mt-8">
@@ -165,20 +144,10 @@ export default function Tasks({ router, navigation }) {
               >
                 <View
                   className={`h-10 ${
-                    activeWorkplace === item._id
-                      ? "bg-purple-200"
-                      : "bg-gray-300"
+                    activeWorkplace === item._id ? "bg-purple-200" : "bg-gray-300"
                   } mr-3 px-2 flex items-center justify-center rounded-full`}
                 >
-                  <Text
-                    className={`${
-                      activeWorkplace === item._id
-                        ? "text-purple-600"
-                        : "text-black"
-                    } font-bold`}
-                  >
-                    {item.name}
-                  </Text>
+                  <Text className={`${activeWorkplace === item._id ? "text-purple-600" : "text-black"} font-bold`}>{item.name}</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -204,61 +173,31 @@ export default function Tasks({ router, navigation }) {
           ? filtered?.map((task, i) => {
               return (
                 <TouchableOpacity
-                  className={`${
-                    i % 3 == 0
-                      ? "bg-pink-400"
-                      : i % 3 == 1
-                      ? "bg-teal-700"
-                      : "bg-purple-700"
-                  } py-10 pb-12`}
-                  onPress={() =>
-                    navigation.navigate("taskView", { id: task._id })
-                  }
+                  className={`${i % 3 == 0 ? "bg-pink-400" : i % 3 == 1 ? "bg-teal-700" : "bg-purple-700"} py-10 pb-12`}
+                  onPress={() => navigation.navigate("taskView", { id: task._id })}
                   key={i}
                 >
                   <View>
                     <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
                       <View>
                         <Text className="text-white/50">TODAY 5:30 PM</Text>
-                        <Text className="text-white/90 text-2xl font-bold">
-                          {task.taskname}
-                        </Text>
+                        <Text className="text-white/90 text-2xl font-bold">{task.taskname}</Text>
                       </View>
                       <View>
                         {task.priority === "High" ? (
-                          <Image
-                            source={require("../assets/red-flag.png")}
-                            className="h-8 pr-12"
-                          />
+                          <Image source={require("../assets/red-flag.png")} className="h-8 pr-12" />
                         ) : (
-                          <Image
-                            source={require("../assets/green-flag.png")}
-                            className="h-8 pr-12"
-                          />
+                          <Image source={require("../assets/green-flag.png")} className="h-8 pr-12" />
                         )}
                       </View>
                     </View>
                     <View className="w-full px-5 flex flex-row items-center gap-2">
                       <View className="flex flex-row relative">
                         {task.followers.slice(0, 2).map((fl, index) => {
-                          return (
-                            <Avatar
-                              follower_id={fl}
-                              color={
-                                index % 2 == 0
-                                  ? "bg-purple-500"
-                                  : "bg-green-500"
-                              }
-                              key={index}
-                            />
-                          );
+                          return <Avatar follower_id={fl} color={index % 2 == 0 ? "bg-purple-500" : "bg-green-500"} key={index} />;
                         })}
                       </View>
-                      {task.followers.length > 1 && (
-                        <Text className="text-white/50">
-                          & {task.followers.length - 1} others
-                        </Text>
-                      )}
+                      {task.followers.length > 1 && <Text className="text-white/50">& {task.followers.length - 1} others</Text>}
                     </View>
                   </View>
                   <View style={styles.flag}></View>
@@ -268,61 +207,31 @@ export default function Tasks({ router, navigation }) {
           : tasks?.map((task, i) => {
               return (
                 <TouchableOpacity
-                  className={`${
-                    i % 3 == 0
-                      ? "bg-pink-400"
-                      : i % 3 == 1
-                      ? "bg-teal-700"
-                      : "bg-purple-700"
-                  } py-10 pb-12`}
-                  onPress={() =>
-                    navigation.navigate("taskView", { id: task._id })
-                  }
+                  className={`${i % 3 == 0 ? "bg-pink-400" : i % 3 == 1 ? "bg-teal-700" : "bg-purple-700"} py-10 pb-12`}
+                  onPress={() => navigation.navigate("taskView", { id: task._id })}
                   key={i}
                 >
                   <View>
                     <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
                       <View>
                         <Text className="text-white/50">TODAY 5:30 PM</Text>
-                        <Text className="text-white/90 text-2xl font-bold">
-                          {task.taskname}
-                        </Text>
+                        <Text className="text-white/90 text-2xl font-bold">{task.taskname}</Text>
                       </View>
                       <View>
                         {task.priority === "High" ? (
-                          <Image
-                            source={require("../assets/red-flag.png")}
-                            className="h-8 pr-12"
-                          />
+                          <Image source={require("../assets/red-flag.png")} className="h-8 pr-12" />
                         ) : (
-                          <Image
-                            source={require("../assets/green-flag.png")}
-                            className="h-8 pr-12"
-                          />
+                          <Image source={require("../assets/green-flag.png")} className="h-8 pr-12" />
                         )}
                       </View>
                     </View>
                     <View className="w-full px-5 flex flex-row items-center gap-2">
                       <View className="flex flex-row relative">
                         {task.followers.slice(0, 2).map((fl, index) => {
-                          return (
-                            <Avatar
-                              follower_id={fl}
-                              color={
-                                index % 2 == 0
-                                  ? "bg-purple-500"
-                                  : "bg-green-500"
-                              }
-                              key={index}
-                            />
-                          );
+                          return <Avatar follower_id={fl} color={index % 2 == 0 ? "bg-purple-500" : "bg-green-500"} key={index} />;
                         })}
                       </View>
-                      {task.followers.length > 1 && (
-                        <Text className="text-white/50">
-                          & {task.followers.length - 1} others
-                        </Text>
-                      )}
+                      {task.followers.length > 1 && <Text className="text-white/50">& {task.followers.length - 1} others</Text>}
                     </View>
                   </View>
                   <View style={styles.flag}></View>

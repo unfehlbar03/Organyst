@@ -1,17 +1,6 @@
 import axios from "axios";
 
-async function signup(
-  fullname,
-  designation,
-  orgainization,
-  fathername,
-  password,
-  mobile,
-  email,
-  aadhar,
-  dob,
-  deviceToken
-) {
+async function signup(fullname, designation, orgainization, fathername, password, mobile, email, aadhar, dob, deviceToken) {
   try {
     const r = await axios.post(
       `http://20.219.16.124:5001/api/register`, //edit the url to local ip of current host

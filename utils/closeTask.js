@@ -13,13 +13,6 @@ const closeTask = async (id, token) => {
         },
       }
     );
-    console.log(
-      "----------------------------------------------------------------"
-    );
-    console.log(r.data);
-    console.log(
-      "----------------------------------------------------------------"
-    );
     return r.data;
   } catch (e) {
     console.log("Error", e);

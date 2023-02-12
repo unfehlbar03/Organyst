@@ -44,12 +44,10 @@ registerTranslation("en", {
   selectSingle: "Select date",
   selectMultiple: "Select dates",
   selectRange: "Select Task's Start and End Date",
-  notAccordingToDateFormat: (inputFormat) =>
-    `Date format must be ${inputFormat}`,
+  notAccordingToDateFormat: (inputFormat) => `Date format must be ${inputFormat}`,
   mustBeHigherThan: (date) => `Must be later then ${date}`,
   mustBeLowerThan: (date) => `Must be earlier then ${date}`,
-  mustBeBetween: (startDate, endDate) =>
-    `Must be between ${startDate} - ${endDate}`,
+  mustBeBetween: (startDate, endDate) => `Must be between ${startDate} - ${endDate}`,
   dateIsDisabled: "Day is not allowed",
   previous: "Previous",
   next: "Next",
@@ -87,18 +85,12 @@ if (isHermesEnabled || isAndroid) {
   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
   if ("__setDefaultTimeZone" in Intl.DateTimeFormat) {
     //  Are you using Expo, use this instead of previous 2 lines
-    Intl.DateTimeFormat.__setDefaultTimeZone(
-      require("expo-localization").timezone
-    );
+    Intl.DateTimeFormat.__setDefaultTimeZone(require("expo-localization").timezone);
   }
 }
 
 export default function App() {
-  const {
-    registerForPushNotificationsAsync,
-    handleNotification,
-    handleNotificationResponse,
-  } = useNotifications();
+  const { registerForPushNotificationsAsync, handleNotification, handleNotificationResponse } = useNotifications();
   useEffect(() => {
     async function getToken() {
       console.log(await registerForPushNotificationsAsync());
@@ -112,9 +104,7 @@ export default function App() {
       }),
     });
 
-    const responseListener = Notifications.addNotificationReceivedListener(
-      handleNotificationResponse
-    );
+    const responseListener = Notifications.addNotificationReceivedListener(handleNotificationResponse);
 
     return () => {
       if (responseListener) {
