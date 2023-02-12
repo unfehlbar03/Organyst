@@ -1,16 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  KeyboardAvoidingView,
-  Card,
-  Alert,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Card, Alert, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import useNotifications from "../hooks/useNotifications";
 import signup from "../utils/signup";
@@ -40,6 +29,7 @@ export default function Signup({ navigation }) {
   // handle signup
 
   const handleSignup = async () => {
+
     if (!fullname || !email || !password) {
       Alert.alert("Enter all mandatory fields");
       return;
@@ -57,6 +47,8 @@ export default function Signup({ navigation }) {
       deviceToken
     );
 
+  
+
     if (response) {
       navigation.navigate("phoneNumber", {
         email: email,
@@ -67,12 +59,7 @@ export default function Signup({ navigation }) {
   };
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <KeyboardAwareScrollView
-        style={{}}
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-        scrollEnabled={false}
-      >
+      <KeyboardAwareScrollView resetScrollToCoords={{ x: 0, y: 0 }} contentContainerStyle={styles.container} scrollEnabled={true}>
         <View style={styles.signup}>
           <View className="py-6 w-[75%]  flex-row items-center justify-between mx-auto my-12">
             <TouchableOpacity
@@ -180,7 +167,7 @@ const styles = StyleSheet.create({
   card: {
     marginTop: -145,
     width: "80%",
-    height: 405,
+    height: 510,
     backgroundColor: "#fff",
     borderRadius: 10,
     elevation: 5,
@@ -191,7 +178,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   input: {
-    height: "10%",
+    height: "11%",
     justifyContent: "flex-start",
     alignSelf: "stretch",
     borderBottomColor: "#a9a9a9",

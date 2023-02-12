@@ -87,18 +87,34 @@ export default function AddNewWorkPlace({ navigation }) {
       });
   };
 
+
+  console.log(tokens);
+  const getFormattedInitial = () => {
+    const words = user?.fullname.toUpperCase().split(" ");
+    return words.length > 1 ? words[0][0] + words[1][0] : words[0][0] + words[0][1];
+  };
+
+
   return (
     <ScrollView className="pb-[300px]">
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
-          <View style={{ flex: 1, justifyContent: "center", paddingLeft: 40 }}>
+        <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20, paddingTop: 40, paddingRight2: 20 }}>
             <View style={{ flexDirection: "row" }}>
-              <View style={{ paddingLeft: 20, flexDirection: "column" }}>
-                <Text style={{ fontSize: 26 }}>Add New Workplace </Text>
+              <View
+                style={{
+                  height: 60,
+                  width: 60,
+                  borderRadius: 30,
+                }}
+                className="flex items-center justify-center bg-green-500"
+              >
+                <Text className="text-white">{user && getFormattedInitial()}</Text>
+              </View>
+              <View style={{ paddingLeft: 15, flexDirection: "column" }}>
+                <Text style={{ fontSize: 22 }}>Add New Workplace </Text>
                 <View style={{ width: 180 }}>
-                  <Text style={{ fontSize: 12, color: "#9599b3" }}>
-                    Find your people and do your thing - together{" "}
-                  </Text>
+                  <Text style={{ fontSize: 12, color: "#9599b3" }}>Find your people and do your thing - together </Text>
                 </View>
               </View>
             </View>
@@ -114,7 +130,6 @@ export default function AddNewWorkPlace({ navigation }) {
                     placeholder="Workplace Name"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
-                    underlineColorAndroid={"#8a56ac"}
                     defaultValue={name}
                     onChangeText={(text) => setName(text)}
                   />
@@ -126,7 +141,6 @@ export default function AddNewWorkPlace({ navigation }) {
                     placeholder="Description"
                     textAlignVertical="top"
                     placeholderTextColor="#9599b3"
-                    underlineColorAndroid={"#8a56ac"}
                     defaultValue={description}
                     onChangeText={(text) => setDescription(text)}
                   />
@@ -149,7 +163,6 @@ export default function AddNewWorkPlace({ navigation }) {
                   Select specific person for the task
                 </Text>
               </TouchableOpacity>
-              <Text style={styles.txt5}> > </Text>
             </View>
 
             <View style={{ alignItems: "center" }}>
@@ -182,12 +195,15 @@ const styles = StyleSheet.create({
   inp1: {
     paddingTop: 40,
     paddingLeft: 20,
+    paddingRight: 20,
   },
   txt: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
     height: 40,
+    borderBottomColor: "#8a56ac",
+    borderBottomWidth: 1,
   },
   btn: {
     width: 327,

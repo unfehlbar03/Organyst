@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +29,7 @@ export default function YourProfile({ navigation }) {
   return (
     <ScrollView>
       <SafeAreaView>
-        <View className="pt-24 px-12 flex flex-col items-center justify-center">
+        <View className="pt-20 px-8 flex flex-col items-center justify-center">
           <View className="flex w-[90%] flex-row  justify-between">
             <TouchableOpacity
               onPress={() => {
@@ -51,48 +43,33 @@ export default function YourProfile({ navigation }) {
                 navigation.navigate("tasks");
               }}
             >
-              <UserNavOption
-                type="icon"
-                name="list"
-                caption={"Tasks"}
-                user={false}
-              />
+              <UserNavOption type="icon" name="list" caption={"Tasks"} user={false} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("alert");
               }}
             >
-              <UserNavOption
-                type="icon"
-                name="alert"
-                caption={"Alerts"}
-                user={false}
-              />
+              <UserNavOption type="icon" name="alert" caption={"Alerts"} user={false} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.aline}>
           <View>
-            <Image
-              style={{ height: 300, width: "100%" }}
-              source={require("../assets/Ava.png")}
-            />
+            <Image style={{ height: 300, width: "100%" }} source={require("../assets/Ava.png")} />
           </View>
           {u && (
             <View style={styles.textaline}>
-              <Text style={styles.txt4}>NUMBER OF MEETUPS</Text>
+              <Text style={styles.txt4}>Hi!</Text>
               <Text style={styles.txt5}>{u.fullname}</Text>
+              {/* <Text style={styles.txt4}>You have </Text> */}
             </View>
           )}
 
           <View>
             <View style={styles.aline2}>
               <TouchableOpacity>
-                <Text
-                  style={styles.txt6}
-                  onPress={() => navigation.navigate("myleadingtask")}
-                >
+                <Text style={styles.txt6} onPress={() => navigation.navigate("myleadingtask")}>
                   My Task
                 </Text>
                 <View style={styles.aline3}>
@@ -107,7 +84,7 @@ export default function YourProfile({ navigation }) {
             <Text style={styles.txt7}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.aline5}>
+        {/* <View style={styles.aline5}>
           <TouchableOpacity>
             <Text style={styles.txt7}>Contact Us</Text>
           </TouchableOpacity>
@@ -116,7 +93,7 @@ export default function YourProfile({ navigation }) {
           <TouchableOpacity>
             <Text style={styles.txt7}>About Us</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.aline5}>
           <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.txt7}>Log Out</Text>

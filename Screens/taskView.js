@@ -1,13 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList } from "react-native";
 import TaskFollower from "../components/TaskFollower";
 import getTask from "../utils/get-task";
 
@@ -41,7 +34,8 @@ export default function TaskView({ route, navigation }) {
         <View
           style={{
             justifyContent: "flex-start",
-            paddingLeft: 80,
+            paddingLeft: 40,
+            paddingRight: 40,
             paddingTop: 70,
           }}
         >
@@ -69,13 +63,11 @@ export default function TaskView({ route, navigation }) {
           paddingRight: 12,
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("taskDetails", { id: task._id })}
-        >
-          <Text style={{ fontSize: 15, color: "#5F4591", fontWeight: "700" }}>
-            View Task Details ->{" "}
-          </Text>
-        </TouchableOpacity>
+        {task && (
+          <TouchableOpacity onPress={() => navigation.navigate("taskDetails", { id: task?._id })}>
+            <Text style={{ fontSize: 15, color: "#5F4591", fontWeight: "700" }}>View Task Details -> </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <View>
         <Text
@@ -92,14 +84,7 @@ export default function TaskView({ route, navigation }) {
       </View>
 
       <View className="mt-6">
-        {task && (
-          <FlatList
-            data={task.followers}
-            renderItem={({ item }) => (
-              <TaskFollower key={item} follower={item} />
-            )}
-          />
-        )}
+        {task && <FlatList data={task.followers} renderItem={({ item }) => <TaskFollower key={item} follower={item} />} />}
       </View>
     </SafeAreaView>
   );

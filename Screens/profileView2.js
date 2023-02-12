@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ImageBackground,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Image, ImageBackground, ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
 import getProfile from "../utils/getProfile";
 import getToken from "../utils/getToken";
 
@@ -51,10 +42,7 @@ export default function ProfileViewTwo({ route, navigation }) {
   return (
     <SafeAreaView>
       <View style={styles.coverContainer}>
-        <ImageBackground
-          style={{ height: 300, width: "100%" }}
-          source={require("../assets/Ava.png")}
-        >
+        <ImageBackground style={{ height: 300, width: "100%" }} source={require("../assets/Ava.png")}>
           <View style={{ paddingTop: 25, alignSelf: "flex-end" }}>
             <TouchableOpacity
               style={styles.circle1}
@@ -63,10 +51,7 @@ export default function ProfileViewTwo({ route, navigation }) {
               }}
             >
               <View style={{ paddingLeft: 8, paddingTop: 8 }}>
-                <Image
-                  style={{ height: 20, width: 20 }}
-                  source={require("../assets/call.png")}
-                />
+                <Image style={{ height: 20, width: 20 }} source={require("../assets/call.png")} />
               </View>
             </TouchableOpacity>
           </View>
@@ -83,13 +68,10 @@ export default function ProfileViewTwo({ route, navigation }) {
           }}
         >
           <View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("profileView", { id: id })}>
               <View style={styles.circle2}>
                 <View style={{ paddingLeft: 12, paddingTop: 16 }}>
-                  <Image
-                    style={{ height: 16, width: 20 }}
-                    source={require("../assets/tick.png")}
-                  />
+                  <Image style={{ height: 16, width: 20 }} source={require("../assets/tick.png")} />
                 </View>
               </View>
             </TouchableOpacity>
@@ -104,15 +86,10 @@ export default function ProfileViewTwo({ route, navigation }) {
             }}
           />
           <View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("profileView2")}
-            >
+            <TouchableOpacity>
               <View style={styles.circle3}>
                 <View style={{ paddingLeft: 12, paddingTop: 10 }}>
-                  <Image
-                    style={{ height: 22, width: 20 }}
-                    source={require("../assets/pending.png")}
-                  />
+                  <Image style={{ height: 22, width: 20 }} source={require("../assets/pending.png")} />
                 </View>
               </View>
             </TouchableOpacity>
@@ -133,9 +110,7 @@ export default function ProfileViewTwo({ route, navigation }) {
                     <View>
                       <TouchableOpacity>
                         <View className="px-2 py-3 bg-purple-900 w-[110px] items-center justify-center rounded-full">
-                          <Text className="text-white font-semibold">
-                            Review
-                          </Text>
+                          <Text className="text-white font-semibold">Review</Text>
                         </View>
                       </TouchableOpacity>
                     </View>
