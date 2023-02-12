@@ -1,14 +1,27 @@
 import React from "react";
+<<<<<<< HEAD
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert } from "react-native";
+=======
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+>>>>>>> be78b8ea88c463dda50be990c761ce5941ff6249
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import getUser from "../utils/get-user-info";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/authSlice";
 import UserNavOption from "../components/TaskNavOption";
+import { resetStore } from "../features/appSlice";
 
 export default function YourProfile({ navigation }) {
   const u = useSelector(selectUser);
+  const dispatch = useDispatch();
   const handleLogout = async () => {
     await AsyncStorage.removeItem("@jwt_token");
     try {
@@ -20,6 +33,8 @@ export default function YourProfile({ navigation }) {
     } catch (e) {
       console.log(e);
     }
+    dispatch(resetStore());
+
     navigation.replace("signin", alert("You have signed out"));
   };
 

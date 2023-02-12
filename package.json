@@ -43,6 +43,8 @@
     "expo-system-ui": "^2.0.1",
     "expo-updates": "^0.15.6",
     "heroicons": "^2.0.13",
+    "javascript-time-ago": "^2.5.9",
+    "moment": "^2.29.4",
     "native-base": "^3.4.25",
     "nativewind": "^2.0.11",
     "react": "18.1.0",
@@ -62,10 +64,12 @@
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-svg": "13.4.0",
+    "react-native-timeago": "^0.5.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "^0.18.10",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.6.1"
+    "react-router-dom": "^6.6.1",
+    "react-time-ago": "^7.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

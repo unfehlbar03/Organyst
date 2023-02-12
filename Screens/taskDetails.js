@@ -15,10 +15,15 @@ import closeTask from "../utils/closeTask";
 import createReview from "../utils/addReview";
 import getTask from "../utils/get-task";
 import getTaskReviews from "../utils/getTaskReviews";
+import fetchUsersTokens from "../utils/fetchUsersTokens";
+import sendNotifcation from "../utils/notifyUsers";
+import { useIsFocused } from "@react-navigation/native";
 export default function TaskDetails({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { id } = route.params;
   const [task, setTask] = useState(null);
+  const isFocused = useIsFocused();
+  const [fetched, setFetched] = useState(false);
   const [file, setFile] = useState(false);
   const [mediaType, setMediaType] = useState("Image");
   const [done, setDone] = useState(false);
@@ -26,7 +31,8 @@ export default function TaskDetails({ route, navigation }) {
   const [reviewModal, setReviewModal] = useState(false);
   const user = useSelector(selectUser);
   const [review, setReview] = useState("");
-  const [reviews, setReviews] = useState(null);
+  const [reviews, setReviews] = useState(false);
+  const [tokens, setTokens] = useState([]);
   let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   useEffect(() => {
@@ -35,26 +41,33 @@ export default function TaskDetails({ route, navigation }) {
       const t = await getTask(token, id);
 
       setTask(t.data);
+
+      setFetched(true);
       if (t.data.files.length > 0) {
         setDone(true);
       }
     }
 
+    async function getUsersTokens() {
+      const tkns = await fetchUsersTokens([task?.leader]);
+      console.log("Incoming tokens", tkns.data);
+      setTokens(tkns.data);
+    }
+
     async function getReviews() {
-      try {
-        const token = await getToken();
-        const r = await getTaskReviews(token, id);
-        console.log("Reviews", r);
-        setReviews(r);
-      } catch (e) {
-        console.log("Error in fetching reviews", e);
-      }
+      const token = await getToken();
+      const r = await getTaskReviews(token, id);
+      console.log("Reviews", r);
+      setReviews(r);
     }
     if (id) {
       getSingleTask();
       getReviews();
     }
-  }, []);
+    if (isFocused) {
+      getUsersTokens();
+    }
+  }, [isFocused, fetched]);
 
   let openImagePickerAsync = async () => {
     try {
@@ -136,10 +149,24 @@ export default function TaskDetails({ route, navigation }) {
       type: "application/" + fileType,
     };
 
-    const r = await completeTask(task._id, token, fileToUpload);
+    const r = await completeTask(task?._id, token, fileToUpload);
 
     if (r.status === "success") {
       Alert.alert("Task submitted");
+      await sendNotifcation(
+        tokens?.map((tkn) => tkn.deviceId),
+        {
+          title: `Submission Created`,
+          subtitle: `${user.fullname} added  Submission for `,
+        },
+        user._id,
+
+        [task.leader],
+
+        "tasks",
+        task.startDate,
+        task.endDate
+      );
       setTask(r.data);
       setDone(true);
     } else {
@@ -163,6 +190,20 @@ export default function TaskDetails({ route, navigation }) {
     const r = await submitTaskByDocument(task._id, token, fileToUpload);
     if (r.status === "success") {
       Alert.alert("Task submitted");
+      await sendNotifcation(
+        tokens?.map((tkn) => tkn.deviceId),
+        {
+          title: `Submission Created`,
+          subtitle: `${user.fullname} added  Submission for `,
+        },
+        user._id,
+
+        [task.leader],
+
+        "tasks",
+        task.startDate,
+        task.endDate
+      );
       setTask(r.data);
       setDone(true);
     } else {
@@ -194,6 +235,7 @@ export default function TaskDetails({ route, navigation }) {
         return Alert.alert("Task not closed, contact admins");
       }
       Alert.alert("Task marked as completed");
+
       setTask({ ...task, completed: true });
     } catch (e) {
       console.log(e);
@@ -212,6 +254,21 @@ export default function TaskDetails({ route, navigation }) {
       console.log("Feedback", feedback);
       if (feedback.status === "success") {
         Alert.alert("Review added");
+
+        await sendNotifcation(
+          tokens?.map((tkn) => tkn.deviceId),
+          {
+            title: `Review`,
+            subtitle: `${user.fullname} added  a Review for ${task?.taskname}`,
+          },
+          user._id,
+
+          [task.leader],
+
+          "tasks",
+          task.startDate,
+          task.endDate
+        );
         setReviewModal(false);
         setReview("");
       }
@@ -255,7 +312,7 @@ export default function TaskDetails({ route, navigation }) {
           <Text className="text-white/50 my-5">{task?.description}</Text>
         </View>
 
-        {/* {reviews?.length && (
+        {reviews?.length > 0 && (
           <View className="py-6 px-6 w-full">
             <Text className="text-white text-xl mb-6">Reviews</Text>
             <FlatList
@@ -272,7 +329,7 @@ export default function TaskDetails({ route, navigation }) {
               showsHorizontalScrollIndicator={false}
             />
           </View>
-        )} */}
+        )}
 
         <View className="w-full absolute bottom-16 flex items-center justify-center px-6">
           {done && !task?.completed && (

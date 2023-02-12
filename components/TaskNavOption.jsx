@@ -1,5 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
+import { useSelector } from "react-redux";
+import { selectAlerts } from "../features/appSlice";
 
 const UserNavOption = ({ type, name, caption, user }) => {
   const getFormattedInitial = () => {
@@ -8,6 +10,8 @@ const UserNavOption = ({ type, name, caption, user }) => {
       ? words[0][0] + words[1][0]
       : words[0][0] + words[0][1];
   };
+  const alerts = useSelector(selectAlerts);
+
   return (
     <View className="relative w-[65px] h-[65px]  flex items-center justify-center gap-2">
       {type === "avatar" && (
@@ -16,9 +20,13 @@ const UserNavOption = ({ type, name, caption, user }) => {
             <Text className="text-white">
               {user && getFormattedInitial(user)}
             </Text>
-            <View className="px-2 py-1 bg-gray-500 absolute top-1 -right-1 rounded-full">
-              <Text className="text-white">12</Text>
-            </View>
+            {alerts?.filter((alert) => !alert.seen).length > 0 && (
+              <View className="px-2 py-1 bg-gray-500 absolute top-1 -right-1 rounded-full">
+                <Text className="text-white">
+                  {alerts?.filter((alert) => !alert.seen).length}
+                </Text>
+              </View>
+            )}
           </>
         </View>
       )}

@@ -11,7 +11,7 @@ const getTaskReviews = async (token, id) => {
       }
     );
 
-    console.log(r.data.data);
+    console.log("Reviews Data", r.data.data);
     return r.data.data;
   } catch (e) {
     console.log(e);

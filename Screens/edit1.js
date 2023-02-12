@@ -21,6 +21,7 @@ import getUser from "../utils/get-user-info";
 export default function Edit1({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+
   const [name, setName] = useState(false);
   const [org, setOrg] = useState(false);
   const [mobile, setMobile] = useState(false);

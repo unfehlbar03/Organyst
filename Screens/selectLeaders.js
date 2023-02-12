@@ -15,14 +15,19 @@ import LeaderComponent from "../components/LeaderComponent";
 import { selectLeader, selectUsers, setTaskLeader } from "../features/appSlice";
 import { selectUser } from "../features/authSlice";
 
-export default function SelectLeaders({ navigation }) {
+export default function SelectLeaders({ route, navigation }) {
   const users = useSelector((state) => selectUsers(state));
+  const { path, item } = route.params;
+
+  console.log("Leader Path", path);
   const user = useSelector(selectUser);
   const leader = useSelector(selectLeader);
 
   const handleSelection = () => {
     if (leader) {
-      navigation.navigate("AddNewTask");
+      navigation.navigate(path === "addTask" ? "AddNewTask" : "modifyTask", {
+        item: item,
+      });
     } else {
       Alert.alert("You have to select atleast one leader for this task.");
     }
@@ -56,7 +61,9 @@ export default function SelectLeaders({ navigation }) {
           />
           <TouchableOpacity
             style={styles.txtaline}
-            onPress={() => navigation.navigate("selectFollowers")}
+            onPress={() =>
+              navigation.navigate("selectFollowers", { path: path, item })
+            }
           >
             <Text style={styles.txt4}>Followers </Text>
           </TouchableOpacity>

@@ -12,7 +12,8 @@ import Follower from "../components/Follower";
 import { selectTaskFollowers, selectUsers } from "../features/appSlice";
 import { selectUser } from "../features/authSlice";
 
-export default function SelectFollowers({ navigation }) {
+export default function SelectFollowers({ route, navigation }) {
+  const { path, item } = route.params;
   const users = useSelector(selectUsers);
   const followers = useSelector(selectTaskFollowers);
   const user = useSelector(selectUser);
@@ -57,7 +58,10 @@ export default function SelectFollowers({ navigation }) {
         <TouchableOpacity
           className="w-full"
           onPress={() => {
-            navigation.navigate("AddNewTask");
+            navigation.navigate(
+              path === "addTask" ? "AddNewTask" : "modifyTask",
+              { item }
+            );
           }}
         >
           <View
