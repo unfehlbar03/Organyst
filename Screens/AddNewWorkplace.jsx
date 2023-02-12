@@ -63,14 +63,26 @@ export default function AddNewWorkPlace({ navigation }) {
     })
       .then(async (res) => {
         const { data } = res;
-        dispatch(resetWorkplaceMembers());
-        dispatch(setAction(false));
+
         Alert.alert("Workplace Created");
 
         // send alerts
-        sendNotifcation(tokens, user.fullname, "Workplace", name).then((r) => {
+        sendNotifcation(
+          tokens,
+          {
+            title: `Workplace Created`,
+            subtitle: `${name} workplace is created by ${user.fullname} in which you assigned as a member`,
+          },
+          user._id,
+          members,
+          "workplaces",
+          new Date(),
+          new Date()
+        ).then((r) => {
           console.log(r);
           dispatch(resetWorkplaceTokens());
+          dispatch(resetWorkplaceMembers());
+          dispatch(setAction(false));
           navigation.navigate("tasks");
         });
       })

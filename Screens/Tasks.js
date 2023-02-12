@@ -11,10 +11,9 @@ import {
   Button,
   FlatList,
 } from "react-native";
+import moment from "moment";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import RNPickerSelect from "react-native-picker-select";
 import fetchTasks from "../utils/fetch-tasks";
 import getUser from "../utils/get-user-info";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +29,8 @@ import {
   selectWorkplaces,
   setActiveWorkplace,
   selectActiveWorkplace,
+  setAlerts,
+  selectAlerts,
 } from "../features/appSlice";
 import UserNavOption from "../components/TaskNavOption";
 import TaskModal from "../components/TaskModal";
@@ -37,6 +38,8 @@ import Avatar from "../components/Avatar";
 import fetchWorkplace from "../utils/fetchWorkplaces";
 import * as Notifications from "expo-notifications";
 import sendPushNotification from "../utils/notifyUser";
+import getMyAlerts from "../utils/getAlerts";
+import useNotifications from "../hooks/useNotifications";
 
 export default function Tasks({ router, navigation }) {
   const [open, setOpen] = useState(false);
@@ -48,10 +51,8 @@ export default function Tasks({ router, navigation }) {
   const [filtered, setFiltered] = React.useState(false);
   const workplaces = useSelector(selectWorkplaces);
   const [deviceToken, setDeviceToken] = useState(null);
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
+  const { getNotifications } = useNotifications();
+  const alerts = useSelector(selectAlerts);
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@jwt_token");
@@ -94,12 +95,23 @@ export default function Tasks({ router, navigation }) {
       }
     }
 
+    async function getUserAlerts() {
+      const token = await getToken();
+      console.log(`user`, user._id);
+      const alerts = await getMyAlerts(token, user._id);
+      console.log("Fetching alerts", tasks);
+      if (alerts) {
+        dispatch(setAlerts(alerts.data));
+        console.log(`User alerts`, alerts);
+      }
+    }
+
     async function getWorkplaces() {
       const token = await getToken();
       const workplaces = await fetchWorkplace(token);
       dispatch(setWorkplaces(workplaces.data));
       console.log("WorkPlaces", workplaces);
-      if (workplaces.data) {
+      if (workplaces.data.length) {
         dispatch(setActiveWorkplace(workplaces.data[0]._id));
       }
     }
@@ -107,6 +119,9 @@ export default function Tasks({ router, navigation }) {
     getTasks();
     getUsers();
     getWorkplaces();
+    if (user) {
+      getUserAlerts();
+    }
   }, [isFocused]);
 
   const handleFiltered = (id) => {
@@ -115,7 +130,11 @@ export default function Tasks({ router, navigation }) {
     setFiltered(filter_tasks);
   };
 
-  console.log(deviceToken);
+  // if we recieved an push notiification call getNotiications
+
+  const newAlerts = getNotifications();
+
+  console.log("New Alert", newAlerts);
 
   return (
     <SafeAreaView className="relative h-screen">
@@ -219,7 +238,9 @@ export default function Tasks({ router, navigation }) {
                   <View>
                     <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
                       <View>
-                        <Text className="text-white/50">TODAY 5:30 PM</Text>
+                        <Text className="text-white/50">
+                          {moment(new Date(task.createdAt)).fromNow()}
+                        </Text>
                         <Text className="text-white/90 text-2xl font-bold">
                           {task.taskname}
                         </Text>
@@ -283,7 +304,9 @@ export default function Tasks({ router, navigation }) {
                   <View>
                     <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
                       <View>
-                        <Text className="text-white/50">TODAY 5:30 PM</Text>
+                        <Text className="text-white/50">
+                          {moment(new Date(task.createdAt)).fromNow()}
+                        </Text>
                         <Text className="text-white/90 text-2xl font-bold">
                           {task.taskname}
                         </Text>

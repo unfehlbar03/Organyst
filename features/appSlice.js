@@ -12,6 +12,7 @@ const intialState = {
   workplaces: [],
   activeWorkplace: null,
   workplaceDeviceTokens: [],
+  userAlerts: [],
 };
 
 export const appSlice = createSlice({
@@ -20,6 +21,12 @@ export const appSlice = createSlice({
   reducers: {
     setLeader: (state, action) => {
       state.leader = action.payload;
+    },
+    setAlerts: (state, action) => {
+      state.userAlerts = action.payload;
+    },
+    addAlert: (state, action) => {
+      state.userAlerts = [...state.userAlerts, action.payload];
     },
 
     setActiveWorkplace: (state, action) => {
@@ -87,6 +94,9 @@ export const appSlice = createSlice({
     setTaskFollowers: (state, action) => {
       state.taskFollowers = [...state.taskFollowers, action.payload];
     },
+    AddFollowers: (state, action) => {
+      state.taskFollowers = action.payload;
+    },
     removeFollower: (state, action) => {
       const index = state.taskFollowers.findIndex(
         (fl) => fl === action.payload
@@ -112,6 +122,20 @@ export const appSlice = createSlice({
     resetWorkplaceTokens: (state, action) => {
       state.workplaceDeviceTokens = [];
     },
+    resetStore: (state, action) => {
+      state.leader = null;
+      state.taskLeader = null;
+      state.taskFollowers = [];
+      state.users = [];
+      state.tasks = [];
+      state.beneficiary = null;
+      state.Action = false;
+      state.workplace_members = [];
+      state.workplaces = [];
+      state.activeWorkplace = null;
+      state.workplaceDeviceTokens = [];
+      state.userAlerts = [];
+    },
   },
 });
 
@@ -133,6 +157,10 @@ export const {
   setWorkplaceDeviceTokens,
   removeWorkplaceTokens,
   resetWorkplaceTokens,
+  setAlerts,
+  addAlert,
+  AddFollowers,
+  resetStore,
 } = appSlice.actions;
 
 export const selectLeader = (state) => state.app.leader;
@@ -145,5 +173,6 @@ export const selectBeneficiary = (state) => state.app.beneficiary;
 export const selectWorkplaceMembers = (state) => state.app.workplace_members;
 export const selectWorkplaces = (state) => state.app.workplaces;
 export const selectActiveWorkplace = (state) => state.app.activeWorkplace;
+export const selectAlerts = (state) => state.app.userAlerts;
 
 export default appSlice.reducer;

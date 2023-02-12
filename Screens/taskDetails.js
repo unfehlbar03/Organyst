@@ -26,10 +26,15 @@ import closeTask from "../utils/closeTask";
 import createReview from "../utils/addReview";
 import getTask from "../utils/get-task";
 import getTaskReviews from "../utils/getTaskReviews";
+import fetchUsersTokens from "../utils/fetchUsersTokens";
+import sendNotifcation from "../utils/notifyUsers";
+import { useIsFocused } from "@react-navigation/native";
 export default function TaskDetails({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { id } = route.params;
   const [task, setTask] = useState(null);
+  const isFocused = useIsFocused();
+  const [fetched, setFetched] = useState(false);
   const [file, setFile] = useState(false);
   const [mediaType, setMediaType] = useState("Image");
   const [done, setDone] = useState(false);
@@ -37,7 +42,8 @@ export default function TaskDetails({ route, navigation }) {
   const [reviewModal, setReviewModal] = useState(false);
   const user = useSelector(selectUser);
   const [review, setReview] = useState("");
-  const [reviews, setReviews] = useState(null);
+  const [reviews, setReviews] = useState(false);
+  const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
     async function getSingleTask() {
@@ -45,26 +51,33 @@ export default function TaskDetails({ route, navigation }) {
       const t = await getTask(token, id);
 
       setTask(t.data);
+
+      setFetched(true);
       if (t.data.files.length > 0) {
         setDone(true);
       }
     }
 
+    async function getUsersTokens() {
+      const tkns = await fetchUsersTokens([task?.leader]);
+      console.log("Incoming tokens", tkns.data);
+      setTokens(tkns.data);
+    }
+
     async function getReviews() {
-      try {
-        const token = await getToken();
-        const r = await getTaskReviews(token, id);
-        console.log("Reviews", r);
-        setReviews(r);
-      } catch (e) {
-        console.log("Error in fetching reviews", e);
-      }
+      const token = await getToken();
+      const r = await getTaskReviews(token, id);
+      console.log("Reviews", r);
+      setReviews(r);
     }
     if (id) {
       getSingleTask();
       getReviews();
     }
-  }, []);
+    if (isFocused) {
+      getUsersTokens();
+    }
+  }, [isFocused, fetched]);
 
   let openImagePickerAsync = async () => {
     try {
@@ -149,10 +162,24 @@ export default function TaskDetails({ route, navigation }) {
       type: "application/" + fileType,
     };
 
-    const r = await completeTask(task._id, token, fileToUpload);
+    const r = await completeTask(task?._id, token, fileToUpload);
 
     if (r.status === "success") {
       Alert.alert("Task submitted");
+      await sendNotifcation(
+        tokens?.map((tkn) => tkn.deviceId),
+        {
+          title: `Submission Created`,
+          subtitle: `${user.fullname} added  Submission for `,
+        },
+        user._id,
+
+        [task.leader],
+
+        "tasks",
+        task.startDate,
+        task.endDate
+      );
       setTask(r.data);
       setDone(true);
     } else {
@@ -176,6 +203,20 @@ export default function TaskDetails({ route, navigation }) {
     const r = await submitTaskByDocument(task._id, token, fileToUpload);
     if (r.status === "success") {
       Alert.alert("Task submitted");
+      await sendNotifcation(
+        tokens?.map((tkn) => tkn.deviceId),
+        {
+          title: `Submission Created`,
+          subtitle: `${user.fullname} added  Submission for `,
+        },
+        user._id,
+
+        [task.leader],
+
+        "tasks",
+        task.startDate,
+        task.endDate
+      );
       setTask(r.data);
       setDone(true);
     } else {
@@ -207,6 +248,7 @@ export default function TaskDetails({ route, navigation }) {
         return Alert.alert("Task not closed, contact admins");
       }
       Alert.alert("Task marked as completed");
+
       setTask({ ...task, completed: true });
     } catch (e) {
       console.log(e);
@@ -222,17 +264,31 @@ export default function TaskDetails({ route, navigation }) {
     }
     try {
       const feedback = await createReview(token, review, task._id);
-      console.log("Feedbacl", feedback);
+      console.log("Feedback", feedback);
       if (feedback.status === "success") {
         Alert.alert("Review added");
+
+        await sendNotifcation(
+          tokens?.map((tkn) => tkn.deviceId),
+          {
+            title: `Review`,
+            subtitle: `${user.fullname} added  a Review for ${task?.taskname}`,
+          },
+          user._id,
+
+          [task.leader],
+
+          "tasks",
+          task.startDate,
+          task.endDate
+        );
         setReviewModal(false);
+        setReview("");
       }
     } catch (e) {
       console.log(e);
     }
   };
-
-  console.log("TASK", task);
   return (
     <SafeAreaView style={styles.header}>
       <View className="h-screen">
@@ -262,7 +318,7 @@ export default function TaskDetails({ route, navigation }) {
           <Text className="text-white/50 my-5">{task?.description}</Text>
         </View>
 
-        {/* {reviews?.length && (
+        {reviews?.length > 0 && (
           <View className="py-6 px-6 w-full">
             <Text className="text-white text-xl mb-6">Reviews</Text>
             <FlatList
@@ -276,23 +332,19 @@ export default function TaskDetails({ route, navigation }) {
                     <Text className="text-lg text-white">
                       {item.description}
                     </Text>
-                    <Text>Created by ${item.reviwed_by}</Text>
+                    <Text>{item.reviwed_by}</Text>
                   </View>
                 </TouchableOpacity>
               )}
               showsHorizontalScrollIndicator={false}
             />
           </View>
-        )} */}
+        )}
 
         <View className="w-full absolute bottom-16 flex items-center justify-center px-6">
           {done && (
             <TouchableOpacity
               onPress={() => {
-                // if (task.leader !== user._id) {
-                //   Alert.alert("You not have permission to do this action");
-                //   return;
-                // }
                 setReviewModal(true);
               }}
               className="w-full mb-3"
@@ -303,11 +355,7 @@ export default function TaskDetails({ route, navigation }) {
             </TouchableOpacity>
           )}
 
-          <View
-            className={`w-full flex-row items-center ${
-              done ? "justify-between" : "justify-center"
-            }`}
-          >
+          <View className={`w-full flex-row items-center gap-2`}>
             {user._id === task?.leader && (
               <TouchableOpacity
                 onPress={() => {
@@ -319,27 +367,19 @@ export default function TaskDetails({ route, navigation }) {
                 </View>
               </TouchableOpacity>
             )}
-            {user._id !== task?.leader && (
+            {user._id !== task?.leader && !task?.completed && (
               <TouchableOpacity
-                onPress={
-                  done
-                    ? handleFileDownload
-                    : () => {
-                        setModalOpen(true);
-                        setStep(0);
-                      }
-                  // () => {
-                  //   navigation.navigate("");
-                  // }
-                }
+                onPress={() => {
+                  setModalOpen(true);
+                  setStep(0);
+                }}
               >
                 <View className=" bg-purple-900 w-full  px-3 mx-auto h-[42px] items-center justify-center rounded-md">
-                  <Text className="font-bold text-white">
-                    {!done ? "Upload File" : "View attachment"}
-                  </Text>
+                  <Text className="font-bold text-white">Submit File</Text>
                 </View>
               </TouchableOpacity>
             )}
+
             {!task?.completed && (
               <TouchableOpacity
                 onPress={
@@ -355,8 +395,9 @@ export default function TaskDetails({ route, navigation }) {
                 </View>
               </TouchableOpacity>
             )}
+
             {task?.completed && (
-              <View className="bg-gray-400 w-auto mx-auto h-[42px] items-center justify-center rounded-md px-3">
+              <View className="bg-gray-400 w-full mx-auto h-[42px] items-center justify-center rounded-md px-3">
                 <Text className="font-bold text-white">Task Closed</Text>
               </View>
             )}

@@ -142,12 +142,25 @@ export default function AddNewTask({ navigation }) {
       .then(async (res) => {
         const { data } = res;
         Alert.alert("Task Created");
+
+        await getTasks();
+        await sendNotifcation(
+          tokens,
+          {
+            title: ` Task Created by ${user.fullname}`,
+            subtitle: `${name} is Created`,
+          },
+          user._id,
+          followers,
+          "tasks",
+
+          range.startDate,
+          range.endDate
+        );
+        dispatch(resetWorkplaceTokens());
         dispatch(setLeader(null));
         dispatch(resetFollowers());
         dispatch(setBeneficiary(null));
-        await getTasks();
-        await sendNotifcation(tokens, user.fullname, "Task", name);
-        dispatch(resetWorkplaceTokens());
         navigation.navigate("tasks");
       })
       .catch((e) => {
@@ -363,7 +376,9 @@ export default function AddNewTask({ navigation }) {
                 />
               </View>
               <TouchableOpacity
-                onPress={() => navigation.navigate("selectLeaders")}
+                onPress={() =>
+                  navigation.navigate("selectLeaders", { path: "addTask" })
+                }
               >
                 <Text style={styles.txt2}>Select People </Text>
                 <Text style={styles.txt4}>

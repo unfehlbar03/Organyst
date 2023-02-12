@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Linking, Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { useNavigation } from "@react-navigation/native";
 
 function useNotifications() {
+  const [notification, setNotification] = useState(false);
   const registerForPushNotificationsAsync = async () => {
     let token;
 
@@ -36,20 +38,24 @@ function useNotifications() {
     }
   };
 
-  const handleNotification = (notification) => {};
+  const handleNotification = (notification) => {
+    console.log("NOT", notification);
+  };
 
   const handleNotificationResponse = (response) => {
     console.log(response);
     const data = response.request.content.data;
-    if (data?.url) {
-      console.log(data.url);
-    }
+    setNotification(data);
   };
+
+  const getNotifications = () => notification;
 
   return {
     registerForPushNotificationsAsync,
     handleNotification,
     handleNotificationResponse,
+
+    getNotifications,
   };
 }
 

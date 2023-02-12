@@ -26,9 +26,10 @@ import TaskDetails1 from "./Screens/taskDetails1";
 import AddNewTask from "./Screens/AddNewTask";
 import ModifyTask from "./Screens/modifyTask";
 import Beneficiary from "./Screens/Benificiary";
+import MyTasks from "./Screens/MyTasks";
 import Edit1 from "./Screens/edit1";
 import ChangePass from "./Screens/changepass";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./store";
 import { registerTranslation } from "react-native-paper-dates";
 import ForgotPassword from "./Screens/ForgotPassword";
@@ -39,6 +40,7 @@ import { useEffect } from "react";
 const Stack = createStackNavigator();
 import * as Notifications from "expo-notifications";
 import useNotifications from "./hooks/useNotifications";
+import getMyAlerts from "./utils/getAlerts";
 registerTranslation("en", {
   save: "Save",
   selectSingle: "Select date",
@@ -98,11 +100,13 @@ export default function App() {
     registerForPushNotificationsAsync,
     handleNotification,
     handleNotificationResponse,
+    getNotifications,
   } = useNotifications();
   useEffect(() => {
     async function getToken() {
       console.log(await registerForPushNotificationsAsync());
     }
+
     getToken();
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -121,7 +125,8 @@ export default function App() {
         Notifications.removeNotificationSubscription(responseListener);
       }
     };
-  }, []);
+  }, [getNotifications()]);
+
   return (
     <NavigationContainer>
       <Provider store={store}>
@@ -153,6 +158,7 @@ export default function App() {
             }}
           />
           <Stack.Screen name="workplaces" component={Workspaces} />
+          <Stack.Screen name="mytasks" component={MyTasks} />
 
           <Stack.Screen
             component={TaskAttachments}

@@ -61,7 +61,7 @@ const TaskModal = ({ open, setOpen }) => {
                       dispatch(setAction(false));
                       action === "Workplace"
                         ? navigation.navigate("workplaces")
-                        : navigation.navigate("modifyTask");
+                        : navigation.navigate("mytasks");
                     }}
                   >
                     <View
