@@ -1,9 +1,10 @@
 import axios from "axios";
 
 async function modifyTask(token, data, id) {
+  console.log("Update task id", id);
   try {
     const r = await axios.post(
-      `http://20.219.16.124:5001/api/task/update/${id}`,
+      `http://192.168.29.170:5001/api/task/update`,
       {
         taskname: data.name,
         subject: data.subject,
@@ -17,6 +18,7 @@ async function modifyTask(token, data, id) {
         leader: data.leader,
         beneficiary: data.beneficiary,
         workplace_id: data.workplace_id,
+        id: id,
       },
       {
         headers: {

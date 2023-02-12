@@ -29,7 +29,25 @@ export default function Signup({ navigation }) {
   // handle signup
 
   const handleSignup = async () => {
-    const response = await signup(fullname, designation, orgainization, fathername, password, mobile, email, aadhar, dob, deviceToken);
+
+    if (!fullname || !email || !password) {
+      Alert.alert("Enter all mandatory fields");
+      return;
+    }
+    const response = await signup(
+      fullname,
+      designation,
+      orgainization,
+      fathername,
+      password,
+      mobile,
+      email,
+      aadhar,
+      dob,
+      deviceToken
+    );
+
+  
 
     if (response) {
       navigation.navigate("phoneNumber", {

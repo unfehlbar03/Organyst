@@ -20,11 +20,9 @@ function TaskFollower({ follower }) {
     async function getUserTasks() {
       const token = await getToken();
       const r = await getUserAssignedTasks(token, follower);
-      console.log(`User Tasks`, r);
       setTasks(r.data);
     }
     if (follower) {
-      console.log(follower);
       fetchProfile();
       getUserTasks();
     }

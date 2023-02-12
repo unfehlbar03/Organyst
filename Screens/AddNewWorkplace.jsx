@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
-import addTask from "../utils/addTask";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import addWorkplace from "../utils/addWorkspace";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +19,6 @@ import {
   selectWorkplaceMembers,
   selectWorkplaceTokens,
   setAction,
-  setWorkplaceMembers,
 } from "../features/appSlice";
 import sendNotifcation from "../utils/notifyUsers";
 import { selectUser } from "../features/authSlice";
@@ -79,7 +76,6 @@ export default function AddNewWorkPlace({ navigation }) {
           new Date(),
           new Date()
         ).then((r) => {
-          console.log(r);
           dispatch(resetWorkplaceTokens());
           dispatch(resetWorkplaceMembers());
           dispatch(setAction(false));
@@ -91,11 +87,13 @@ export default function AddNewWorkPlace({ navigation }) {
       });
   };
 
+
   console.log(tokens);
   const getFormattedInitial = () => {
     const words = user?.fullname.toUpperCase().split(" ");
     return words.length > 1 ? words[0][0] + words[1][0] : words[0][0] + words[0][1];
   };
+
 
   return (
     <ScrollView className="pb-[300px]">

@@ -12,7 +12,7 @@ const AlertComponent = ({ item }) => {
     try {
       const token = await getToken();
       const updated = await changeAlertStatus(item._id, token);
-      console.log(updated);
+
       if (updated.data) {
         setRead(true);
         navigation.navigate(item.path);

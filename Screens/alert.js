@@ -18,7 +18,6 @@ import { selectAlerts } from "../features/appSlice";
 
 export default function Alert({ navigation }) {
   const alerts = useSelector(selectAlerts);
-  console.log("ALERTS", alerts);
   return (
     <SafeAreaView>
       <View className="h-screen">

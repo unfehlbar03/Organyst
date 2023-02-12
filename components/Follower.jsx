@@ -10,7 +10,6 @@ import {
 } from "../features/appSlice";
 
 const Follower = ({ follower }) => {
-  console.log("FOLLOWER", follower);
   const dispatch = useDispatch();
   const followers = useSelector(selectTaskFollowers);
   const getFormattedIntial = (name) => {

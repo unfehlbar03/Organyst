@@ -1,12 +1,7 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectLeader,
-  selectTaskFollowers,
-  selectTaskLeader,
-  setLeader,
-} from "../features/appSlice";
+import { selectLeader, setLeader } from "../features/appSlice";
 
 const CheckBox = ({ leader }) => {
   const [checked, setChecked] = React.useState(false);

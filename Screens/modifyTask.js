@@ -19,21 +19,23 @@ import {
   selectTaskFollowers,
   selectBeneficiary,
   setBeneficiary,
-  selectActiveWorkplace,
   selectWorkplaces,
   resetWorkplaceTokens,
   setTaskFollowers,
   selectWorkplaceTokens,
+  selectModifyUsers,
+  modifiedLeader,
+  resetModify,
 } from "../features/appSlice";
-import addTask from "../utils/addTask";
 import { selectUser } from "../features/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import { setLeader, setTasks } from "../features/appSlice";
 import { useDispatch, useSelector } from "react-redux";
 import fetchTasks from "../utils/fetch-tasks";
-import sendNotifcation from "../utils/notifyUsers";
 import modifyTask from "../utils/modifyTask";
+import fetchUsersTokens from "../utils/fetchUsersTokens";
+import sendNotifcation from "../utils/notifyUsers";
 
 export default function ModifyTask({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,9 +45,9 @@ export default function ModifyTask({ route, navigation }) {
   const [description, setDescription] = useState(item ? item.description : "");
   const [subject, setSubject] = useState(item ? item.subject : "");
   const [priority, setPriority] = useState(item ? item.priority : "Low");
-  const leader = useSelector(selectLeader);
+  const leader = useSelector(modifiedLeader);
   const beneficiary = useSelector(selectBeneficiary);
-  const followers = useSelector(selectTaskFollowers);
+  const followers = useSelector(selectModifyUsers);
   const workplaces = useSelector(selectWorkplaces);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -142,25 +144,31 @@ export default function ModifyTask({ route, navigation }) {
     )
       .then(async (res) => {
         const { data } = res;
-        console.log(JSON.stringify(data));
-        Alert.alert("Task Created");
 
+        console.log(`Response from Update`, data);
+        Alert.alert("Task Updated Successfully");
         await getTasks();
-        // await sendNotifcation(
-        //   tokens,
-        //   user.fullname,
-        //   "Task",
-        //   name,
-        //   user._id,
-        //   followers,
-        //   "tasks",
-        //   range.startDate,
-        //   range.endDate
-        // );
+        const getDeviceTokens = await fetchUsersTokens(followers);
+        console.log("Device Ids", getDeviceTokens);
+        if (getDeviceTokens.data.length) {
+          await sendNotifcation(
+            getDeviceTokens.data.map((i) => i.deviceId),
+            {
+              title: ` Task Updated by ${user.fullname}`,
+              subtitle: `${name} is Updated`,
+            },
+            user._id,
+            followers,
+            "tasks",
+            range.startDate,
+            range.endDate
+          );
+        }
         dispatch(resetWorkplaceTokens());
         dispatch(setLeader(null));
         dispatch(resetFollowers());
         dispatch(setBeneficiary(null));
+        dispatch(resetModify());
         navigation.navigate("tasks");
       })
       .catch((e) => {
@@ -200,6 +208,7 @@ export default function ModifyTask({ route, navigation }) {
       : words[0][0] + words[0][1];
   };
 
+  console.log(`Leader ${leader}`);
   return (
     <ScrollView>
       <SafeAreaView style={{ flex: 1 }}>
@@ -345,7 +354,6 @@ export default function ModifyTask({ route, navigation }) {
                 visible={open}
                 onDismiss={onDismiss}
                 startDate={range.startDate}
-                // endDate={range.endDate}
                 onConfirm={onConfirm}
                 uppercase={false}
               />
@@ -383,17 +391,40 @@ export default function ModifyTask({ route, navigation }) {
               </View>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("selectLeaders", {
-                    path: "modifyTask",
-                    item: item,
+                  navigation.navigate("modifyTaskLeader", {
+                    leader: item.leader,
                   })
                 }
               >
-                <Text style={styles.txt2}>Select People </Text>
+                <Text style={styles.txt2}>Select Leader </Text>
                 <Text style={styles.txt4}>
                   Select specific person for the task
                 </Text>
               </TouchableOpacity>
+
+              <Text style={styles.txt5}> > </Text>
+            </View>
+
+            <View style={{ flexDirection: "row", paddingTop: 40 }}>
+              <View style={{ paddingLeft: 20, marginTop: 4 }}>
+                <Image
+                  style={{ height: 17, width: 17 }}
+                  source={require("../assets/SelectPeople.png")}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("modifyTaskFollowers", {
+                    followers: item.followers,
+                  })
+                }
+              >
+                <Text style={styles.txt2}>Select Followers </Text>
+                <Text style={styles.txt4}>
+                  Select specific person for the task
+                </Text>
+              </TouchableOpacity>
+
               <Text style={styles.txt5}> > </Text>
             </View>
             <View style={{ flexDirection: "row", paddingTop: 40 }}>
