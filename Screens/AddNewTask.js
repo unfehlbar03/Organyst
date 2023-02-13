@@ -44,6 +44,7 @@ export default function AddNewTask({ navigation }) {
   const workplaces = useSelector(selectWorkplaces);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const workplace_id = useSelector(selectActiveWorkplace);
   const tokens = useSelector(selectWorkplaceTokens);
 
   //Date Picker states and functions
@@ -231,7 +232,7 @@ export default function AddNewTask({ navigation }) {
 
                 {workplaces.length > 0 && (
                   <View className="px-6 mt-5">
-                    <Text className="text-[#9599b3] font-bold mb-3">Choose Workflow</Text>
+                    <Text className="text-[#9599b3] font-bold mb-3">Choose Workspace</Text>
                     <FlatList
                       data={workplaces}
                       horizontal
@@ -314,8 +315,9 @@ export default function AddNewTask({ navigation }) {
                   }
                 }}
               >
-
-
+                <Text style={styles.txt2}>Select People </Text>
+                <Text style={styles.txt4}>Select specific person for the task</Text>
+              </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row", paddingTop: 35 }}>
               <View style={{ paddingLeft: 20, marginTop: 4 }}>

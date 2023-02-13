@@ -231,7 +231,7 @@ export default function Tasks({ router, navigation }) {
                   key={i}
                 >
                   <View>
-                    <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2">
+                    <View className="flex flex-row items-center justify-between w-[90%] mx-auto  py-2 pr-2">
                       <View>
                         <Text className="text-white/50">{moment(new Date(task.createdAt)).fromNow()}</Text>
                         <Text className="text-white/90 text-2xl font-bold">{task.taskname}</Text>
@@ -250,7 +250,11 @@ export default function Tasks({ router, navigation }) {
                           return <Avatar follower_id={fl} color={index % 2 == 0 ? "bg-purple-500" : "bg-green-500"} key={index} />;
                         })}
                       </View>
-                      {task.followers.length > 1 && <Text className="text-white/50">& {task.followers.length - 1} others</Text>}
+                      {task.followers.length > 1 && (
+                        <Text className="text-white/50">
+                          & {task.followers.length - 1} others
+                        </Text>
+                      )}
                     </View>
                   </View>
                   <View style={styles.flag}></View>
@@ -260,7 +264,7 @@ export default function Tasks({ router, navigation }) {
       </ScrollView>
 
       <TouchableOpacity
-        className="w-[55px] h-[55px] absolute bottom-5 right-5 bg-white flex items-center justify-center rounded-full shadow-md"
+        className="w-[55px] h-[55px] absolute bottom-5 right-5 bg-white flex items-center justify-center rounded-full shadow-md mb-2"
         onPress={() => setOpen(true)}
       >
         <Text className="text-2xl font-semibold">+</Text>

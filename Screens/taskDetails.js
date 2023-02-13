@@ -321,22 +321,16 @@ export default function TaskDetails({ route, navigation }) {
               data={reviews}
               horizontal
               renderItem={({ item, index }) => (
-
                 <TouchableOpacity
                   className={`w-[275px] h-[115px] ${index && "ml-8"}`}
                   onPress={() => {
                     navigation.navigate("Review", { review: item });
                   }}
                 >
-                  <View
-                    className={`${
-                      item.description.length > 30 ? "px-6" : "px-2"
-                    } py-5  bg-purple-500 w-full h-full rounded-md`}
-                  >
-                    <Text className="text-lg text-white">
-                      {item.description}
-                    </Text>
-
+                  <View className={`${item.description.length > 30 ? "px-6" : "px-2"} py-5  bg-purple-500 w-full h-full rounded-md`}>
+                    <Text className="text-lg text-white">{item.description}</Text>
+                  </View>
+                </TouchableOpacity>
               )}
               showsHorizontalScrollIndicator={false}
             />

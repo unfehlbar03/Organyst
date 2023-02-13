@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  ImageBackgroundBase,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, ImageBackgroundBase, Alert } from "react-native";
 
 import { useSelector } from "react-redux";
 import LeaderComponent from "../components/LeaderComponent";
@@ -92,10 +83,7 @@ export default function SelectLeaders({ route, navigation }) {
           getFilteredUsers().map((u) => {
             return <LeaderComponent key={u._id} leader={u} />;
           })}
-        <TouchableOpacity
-          style={{ flex: 1, flexDirection: "column-reverse", paddingTop: 50 }}
-          onPress={handleSelection}
-        >
+        <TouchableOpacity style={{ flex: 1, flexDirection: "column-reverse", paddingTop: 50 }} onPress={handleSelection}>
           <View style={styles.button}>
             <Text style={styles.txt6}>SELECT</Text>
           </View>

@@ -21,8 +21,6 @@ export default function YourProfile({ navigation }) {
     } catch (e) {
       console.log(e);
     }
-    dispatch(resetStore());
-
     navigation.replace("signin", alert("You have signed out"));
   };
 
@@ -163,6 +161,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   aline2: {
+    flexDirection: "row",
     paddingTop: 90,
     paddingLeft: 25,
   },
